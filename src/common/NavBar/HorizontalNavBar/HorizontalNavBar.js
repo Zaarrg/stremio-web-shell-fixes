@@ -15,6 +15,8 @@ const { t } = require('i18next');
 
 const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, ...props }) => {
     const backButtonOnClick = React.useCallback(() => {
+        document.querySelector('body').style.background = '';
+        document.getElementById('app').style.background = '';
         window.history.back();
     }, []);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();
