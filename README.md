@@ -5,6 +5,12 @@
 
 Stremio is a modern media center that's a one-stop solution for your video entertainment. You discover, watch and organize video content from easy to install addons.
 
+## ⚠️ **Fork Disclaimer**
+- 🚧 **Work in Progress:** This is a fork of the official [Stremio Web](https://github.com/Stremio/stremio-web).
+- ✨ **Primary Goal:** Fixes for Stremio Web v5 to make it work with stremio-shell (Desktop App).
+- ⚠️ **Caution:** Stuff might break frequently.
+
+
 ## Build
 
 ### Prerequisites

@@ -207,7 +207,10 @@ const Player = ({ urlParams, queryParams }) => {
             const deepLinks = player.nextVideo.deepLinks;
             if (deepLinks.metaDetailsStreams && deepLinks.player) {
                 window.location.replace(deepLinks.metaDetailsStreams);
-                window.location.href = deepLinks.player;
+                setTimeout(function() {
+                    //Qt5 fix. Has to be >600 otherwise qt: [ffmpeg] tls: Unknown error
+                    window.location.href = deepLinks.player;
+                }, 600);
             } else {
                 window.location.replace(deepLinks.player ?? deepLinks.metaDetailsStreams);
             }
