@@ -478,6 +478,7 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
+                case 'Numpad6':
                 case 'ArrowRight': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
@@ -487,6 +488,7 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
+                case 'Numpad4':
                 case 'ArrowLeft': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
@@ -496,6 +498,7 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
+                case 'Numpad8':
                 case 'ArrowUp': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.volume !== null) {
                         onVolumeChangeRequested(video.state.volume + 5);
@@ -503,6 +506,7 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
+                case 'Numpad2':
                 case 'ArrowDown': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.volume !== null) {
                         onVolumeChangeRequested(video.state.volume - 5);
@@ -559,7 +563,7 @@ const Player = ({ urlParams, queryParams }) => {
             }
         };
         const onKeyUp = (event) => {
-            if (event.code === 'ArrowRight' || event.code === 'ArrowLeft') {
+            if (event.code === 'ArrowRight' || event.code === 'ArrowLeft' || event.code === 'Numpad6' || event.code === 'Numpad4') {
                 setSeeking(false);
             }
         };
