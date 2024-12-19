@@ -29,9 +29,8 @@ jobs:
 
       # Deploy the generated build directory to gh-pages branch.
       # This uses the actions/gh-pages action to push your `build` folder to `gh-pages` branch.
-      - name: Deploy to gh-pages
-        uses: actions/gh-pages@v3
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          branch: gh-pages
-          folder: build
-          token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
