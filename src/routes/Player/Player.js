@@ -95,7 +95,11 @@ const Player = ({ urlParams, queryParams }) => {
         video.setProp('extraSubtitlesOutlineColor', settings.subtitlesOutlineColor);
     }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor]);
 
+    const stableNextVideoRef = React.useRef(player.nextVideo);
+    stableNextVideoRef.current = player.nextVideo;
+
     const onEnded = React.useCallback(() => {
+        player.nextVideo = stableNextVideoRef.current;
         ended();
         if (player.nextVideo !== null) {
             onNextVideoRequested();
@@ -603,6 +607,8 @@ const Player = ({ urlParams, queryParams }) => {
             video.events.off('subtitlesTrackLoaded', onSubtitlesTrackLoaded);
             video.events.off('extraSubtitlesTrackLoaded', onExtraSubtitlesTrackLoaded);
             video.events.off('implementationChanged', onImplementationChanged);
+            if (document.querySelector('body').style.background) document.querySelector('body').style.background = '';
+            if (document.getElementById('app').style.background) document.getElementById('app').style.background = '';
         };
     }, []);
 
