@@ -17,7 +17,7 @@
 
 ## ⚠️ **Fork Disclaimer**
 - 🚧 **Work in Progress:** This is a fork of the official [Stremio Web](https://github.com/Stremio/stremio-web).
-- ✨ **Primary Goal:** Fixes for Stremio Web v5 to make it work with stremio-shell-qt6 (Desktop App).
+- ✨ **Primary Goal:** Fixes for Stremio Web v5 to make it work with [stremio-shell-qt6 (Desktop App)](https://github.com/Zaarrg/stremio-desktop-v5).
 - ⚠️ **Caution:** Stuff might break frequently.
 
 ## 🌟 **Fixes**
