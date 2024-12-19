@@ -1,0 +1,37 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      # Build your project. This step mirrors what the Dockerfile does for building: `npm run build`.
+      # Make sure "npm run build" produces a `build` directory with static assets.
+      - name: Build
+        run: npm run build
+
+      # Deploy the generated build directory to gh-pages branch.
+      # This uses the actions/gh-pages action to push your `build` folder to `gh-pages` branch.
+      - name: Deploy to gh-pages
+        uses: actions/gh-pages@v3
+        with:
+          branch: gh-pages
+          folder: build
+          token: ${{ secrets.GITHUB_TOKEN }}
