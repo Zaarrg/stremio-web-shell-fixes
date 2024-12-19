@@ -15,8 +15,9 @@ const { t } = require('i18next');
 
 const HorizontalNavBar = React.memo(({ className, route, query, title, backButton, searchBar, fullscreenButton, navMenu, ...props }) => {
     const backButtonOnClick = React.useCallback(() => {
-        if (document.querySelector('body').style.background) document.querySelector('body').style.background = '';
-        if (document.getElementById('app').style.background) document.getElementById('app').style.background = '';
+        localStorage.setItem('nextVideo', 0);
+        localStorage.removeItem('audioTrackId');
+        localStorage.removeItem('subtitleId');
         window.history.back();
     }, []);
     const [fullscreen, requestFullscreen, exitFullscreen] = useFullscreen();

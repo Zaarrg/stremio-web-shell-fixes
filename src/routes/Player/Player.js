@@ -95,11 +95,19 @@ const Player = ({ urlParams, queryParams }) => {
         video.setProp('extraSubtitlesOutlineColor', settings.subtitlesOutlineColor);
     }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor]);
 
+    const stableNextVideoRef = React.useRef(player.nextVideo);
+    stableNextVideoRef.current = player.nextVideo;
+
     const onEnded = React.useCallback(() => {
+        player.nextVideo = stableNextVideoRef.current;
         ended();
         if (player.nextVideo !== null) {
+            localStorage.setItem('nextVideo', 1);
             onNextVideoRequested();
         } else {
+            localStorage.setItem('nextVideo', 0);
+            localStorage.removeItem('audioTrackId');
+            localStorage.removeItem('subtitleId');
             window.history.back();
         }
     }, [player.nextVideo, onNextVideoRequested]);
@@ -373,6 +381,11 @@ const Player = ({ urlParams, queryParams }) => {
 
     React.useEffect(() => {
         if (!defaultSubtitlesSelected.current) {
+            if (localStorage.getItem('nextVideo') === '1' && localStorage.getItem('subtitleId')) {
+                onSubtitlesTrackSelected(localStorage.getItem('subtitleId'));
+                defaultSubtitlesSelected.current = true;
+                return;
+            }
             const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 
             const subtitlesTrack = findTrackByLang(video.state.subtitlesTracks, settings.subtitlesLanguage);
@@ -390,6 +403,11 @@ const Player = ({ urlParams, queryParams }) => {
 
     React.useEffect(() => {
         if (!defaultAudioTrackSelected.current) {
+            if (localStorage.getItem('nextVideo') === '1' && localStorage.getItem('audioTrackId')) {
+                onAudioTrackSelected(localStorage.getItem('audioTrackId'));
+                defaultAudioTrackSelected.current = true;
+                return;
+            }
             const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
             const audioTrack = findTrackByLang(video.state.audioTracks, settings.audioLanguage);
 
@@ -603,6 +621,9 @@ const Player = ({ urlParams, queryParams }) => {
             video.events.off('subtitlesTrackLoaded', onSubtitlesTrackLoaded);
             video.events.off('extraSubtitlesTrackLoaded', onExtraSubtitlesTrackLoaded);
             video.events.off('implementationChanged', onImplementationChanged);
+
+            if (document.querySelector('body').style.background) document.querySelector('body').style.background = '';
+            if (document.getElementById('app').style.background) document.getElementById('app').style.background = '';
         };
     }, []);
 

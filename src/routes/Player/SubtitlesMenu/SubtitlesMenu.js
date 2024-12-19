@@ -87,6 +87,7 @@ const SubtitlesMenu = React.memo((props) => {
     const subtitlesTrackOnClick = React.useCallback((event) => {
         if (event.currentTarget.dataset.embedded === 'true') {
             if (typeof props.onSubtitlesTrackSelected === 'function') {
+                localStorage.setItem('subtitleId', event.currentTarget.dataset.id);
                 props.onSubtitlesTrackSelected(event.currentTarget.dataset.id);
             }
         } else {
@@ -147,6 +148,7 @@ const SubtitlesMenu = React.memo((props) => {
     const audioTrackOnClick = React.useCallback((event) => {
         if (typeof props.onAudioTrackSelected === 'function') {
             props.onAudioTrackSelected(event.currentTarget.dataset.id);
+            localStorage.setItem('audioTrackId', event.currentTarget.dataset.id);
         }
     }, [props.onAudioTrackSelected]);
     return (
