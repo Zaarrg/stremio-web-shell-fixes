@@ -24,6 +24,9 @@ jobs:
 
       - name: Merge upstream/development into your fork's main
         run: |
+          git config --global user.name 'Zaarrg'
+          git config --global user.email 'Zaarrg@users.noreply.github.com'
+          
           git merge upstream/development --allow-unrelated-histories
           git push origin development
         env:
