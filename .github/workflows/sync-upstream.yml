@@ -24,7 +24,7 @@ jobs:
 
       - name: Merge upstream/development into your fork's main
         run: |
-          git merge upstream/development
+          git merge upstream/development --allow-unrelated-histories
           git push origin development
         env:
           # If needed, use your PAT if GITHUB_TOKEN is insufficient:
