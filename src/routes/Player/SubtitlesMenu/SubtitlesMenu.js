@@ -76,10 +76,12 @@ const SubtitlesMenu = React.memo((props) => {
             }
         } else if (track.embedded) {
             if (typeof props.onSubtitlesTrackSelected === 'function') {
+                localStorage.setItem('subtitleId', track.id);
                 props.onSubtitlesTrackSelected(track.id);
             }
         } else {
             if (typeof props.onExtraSubtitlesTrackSelected === 'function') {
+                localStorage.setItem('subtitleId', track.id);
                 props.onExtraSubtitlesTrackSelected(track.id);
             }
         }
@@ -92,6 +94,7 @@ const SubtitlesMenu = React.memo((props) => {
             }
         } else {
             if (typeof props.onExtraSubtitlesTrackSelected === 'function') {
+                localStorage.setItem('subtitleId', event.currentTarget.dataset.id);
                 props.onExtraSubtitlesTrackSelected(event.currentTarget.dataset.id);
             }
         }

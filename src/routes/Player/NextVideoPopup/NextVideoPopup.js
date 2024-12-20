@@ -33,15 +33,11 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideo
     }, [metaItem]);
     const onDismissButtonClick = React.useCallback(() => {
         if (typeof onDismiss === 'function') {
-            localStorage.setItem('nextVideo', 0);
-            localStorage.removeItem('audioTrackId');
-            localStorage.removeItem('subtitleId');
             onDismiss();
         }
     }, [onDismiss]);
     const onWatchNowButtonClick = React.useCallback(() => {
         if (typeof onNextVideoRequested === 'function') {
-            localStorage.setItem('nextVideo', 1);
             onNextVideoRequested();
         }
     }, [onNextVideoRequested]);

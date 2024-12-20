@@ -102,12 +102,8 @@ const Player = ({ urlParams, queryParams }) => {
         player.nextVideo = stableNextVideoRef.current;
         ended();
         if (player.nextVideo !== null) {
-            localStorage.setItem('nextVideo', 1);
             onNextVideoRequested();
         } else {
-            localStorage.setItem('nextVideo', 0);
-            localStorage.removeItem('audioTrackId');
-            localStorage.removeItem('subtitleId');
             window.history.back();
         }
     }, [player.nextVideo, onNextVideoRequested]);
@@ -381,29 +377,38 @@ const Player = ({ urlParams, queryParams }) => {
 
     React.useEffect(() => {
         if (!defaultSubtitlesSelected.current) {
-            if (localStorage.getItem('nextVideo') === '1' && localStorage.getItem('subtitleId')) {
-                onSubtitlesTrackSelected(localStorage.getItem('subtitleId'));
-                defaultSubtitlesSelected.current = true;
-                return;
-            }
-            const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
+            if (localStorage.getItem('lastVideo') === urlParams.id && localStorage.getItem('subtitleId')) {
+                if (localStorage.getItem('subtitleId').includes('https')) {
+                    if (video.state.extraSubtitlesTracks.length > 0) {
+                        onExtraSubtitlesTrackSelected(localStorage.getItem('subtitleId'));
+                        defaultSubtitlesSelected.current = true;
+                    }
+                } else if (video.state.subtitlesTracks.length > 0) {
+                    onSubtitlesTrackSelected(localStorage.getItem('subtitleId'));
+                    defaultSubtitlesSelected.current = true;
+                }
+            } else {
+                const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
 
-            const subtitlesTrack = findTrackByLang(video.state.subtitlesTracks, settings.subtitlesLanguage);
-            const extraSubtitlesTrack = findTrackByLang(video.state.extraSubtitlesTracks, settings.subtitlesLanguage);
+                const subtitlesTrack = findTrackByLang(video.state.subtitlesTracks, settings.subtitlesLanguage);
+                const extraSubtitlesTrack = findTrackByLang(video.state.extraSubtitlesTracks, settings.subtitlesLanguage);
 
-            if (subtitlesTrack && subtitlesTrack.id) {
-                onSubtitlesTrackSelected(subtitlesTrack.id);
-                defaultSubtitlesSelected.current = true;
-            } else if (extraSubtitlesTrack && extraSubtitlesTrack.id) {
-                onExtraSubtitlesTrackSelected(extraSubtitlesTrack.id);
-                defaultSubtitlesSelected.current = true;
+                if (subtitlesTrack && subtitlesTrack.id) {
+                    onSubtitlesTrackSelected(subtitlesTrack.id);
+                    defaultSubtitlesSelected.current = true;
+                } else if (extraSubtitlesTrack && extraSubtitlesTrack.id) {
+                    onExtraSubtitlesTrackSelected(extraSubtitlesTrack.id);
+                    defaultSubtitlesSelected.current = true;
+                }
             }
         }
     }, [video.state.subtitlesTracks, video.state.extraSubtitlesTracks]);
 
     React.useEffect(() => {
         if (!defaultAudioTrackSelected.current) {
-            if (localStorage.getItem('nextVideo') === '1' && localStorage.getItem('audioTrackId')) {
+            if (video.state.audioTracks.length === 0) return;
+
+            if (localStorage.getItem('lastVideo') === urlParams.id && localStorage.getItem('audioTrackId')) {
                 onAudioTrackSelected(localStorage.getItem('audioTrackId'));
                 defaultAudioTrackSelected.current = true;
                 return;
@@ -624,6 +629,7 @@ const Player = ({ urlParams, queryParams }) => {
 
             if (document.querySelector('body').style.background) document.querySelector('body').style.background = '';
             if (document.getElementById('app').style.background) document.getElementById('app').style.background = '';
+            localStorage.setItem('lastVideo', urlParams.id);
         };
     }, []);
 

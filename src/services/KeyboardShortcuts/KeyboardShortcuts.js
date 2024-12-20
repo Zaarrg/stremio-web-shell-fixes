@@ -48,6 +48,7 @@ function KeyboardShortcuts() {
                 window.location = '#/settings';
                 break;
             }
+            case 'Escape':
             case 'Backspace': {
                 event.preventDefault();
                 if (event.ctrlKey) {
