@@ -78,6 +78,8 @@ const Player = ({ urlParams, queryParams }) => {
     }, [immersed, casting, video.state.paused, menusOpen, nextVideoPopupOpen]);
 
     const nextVideoPopupDismissed = React.useRef(false);
+    const nextVideoInitialData = React.useRef(player.nextVideo);
+    nextVideoInitialData.current = player.nextVideo;
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const [error, setError] = React.useState(null);
@@ -95,11 +97,8 @@ const Player = ({ urlParams, queryParams }) => {
         video.setProp('extraSubtitlesOutlineColor', settings.subtitlesOutlineColor);
     }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor]);
 
-    const stableNextVideoRef = React.useRef(player.nextVideo);
-    stableNextVideoRef.current = player.nextVideo;
-
     const onEnded = React.useCallback(() => {
-        player.nextVideo = stableNextVideoRef.current;
+        player.nextVideo = nextVideoInitialData.current;
         ended();
         if (player.nextVideo !== null) {
             onNextVideoRequested();
@@ -211,10 +210,7 @@ const Player = ({ urlParams, queryParams }) => {
             const deepLinks = player.nextVideo.deepLinks;
             if (deepLinks.metaDetailsStreams && deepLinks.player) {
                 window.location.replace(deepLinks.metaDetailsStreams);
-                setTimeout(function() {
-                    //Qt5 fix. Has to be >600 otherwise qt: [ffmpeg] tls: Unknown error
-                    window.location.href = deepLinks.player;
-                }, 600);
+                window.location.href = deepLinks.player;
             } else {
                 window.location.replace(deepLinks.player ?? deepLinks.metaDetailsStreams);
             }
