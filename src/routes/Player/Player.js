@@ -80,7 +80,6 @@ const Player = ({ urlParams, queryParams }) => {
     const nextVideoPopupDismissed = React.useRef(false);
     const nextVideoInitialData = React.useRef(player.nextVideo);
     nextVideoInitialData.current = player.nextVideo;
-    const isNextVideoRequested = React.useRef(false);
     const defaultSubtitlesSelected = React.useRef(false);
     const defaultAudioTrackSelected = React.useRef(false);
     const [error, setError] = React.useState(null);
@@ -100,9 +99,9 @@ const Player = ({ urlParams, queryParams }) => {
 
     const onEnded = React.useCallback(() => {
         player.nextVideo = nextVideoInitialData.current;
-        if (player.nextVideo !== null && isNextVideoRequested.current === false) {
+        if (player.nextVideo !== null) {
             onNextVideoRequested();
-        } else if (player.nextVideo === null) {
+        } else {
             ended();
             window.history.back();
         }
@@ -205,8 +204,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const onNextVideoRequested = React.useCallback(() => {
-        if (player.nextVideo !== null && isNextVideoRequested.current === false) {
-            isNextVideoRequested.current = true;
+        if (player.nextVideo !== null) {
             nextVideo();
 
             const deepLinks = player.nextVideo.deepLinks;
@@ -425,7 +423,6 @@ const Player = ({ urlParams, queryParams }) => {
         defaultSubtitlesSelected.current = false;
         defaultAudioTrackSelected.current = false;
         nextVideoPopupDismissed.current = false;
-        isNextVideoRequested.current = false;
     }, [video.state.stream]);
 
     React.useEffect(() => {
