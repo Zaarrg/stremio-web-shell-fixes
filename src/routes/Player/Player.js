@@ -373,29 +373,36 @@ const Player = ({ urlParams, queryParams }) => {
 
     React.useEffect(() => {
         if (!defaultSubtitlesSelected.current) {
-            if (localStorage.getItem('lastVideo') === urlParams.id && localStorage.getItem('subtitleId')) {
-                if (localStorage.getItem('subtitleId').includes('https')) {
-                    if (video.state.extraSubtitlesTracks.length > 0) {
-                        onExtraSubtitlesTrackSelected(localStorage.getItem('subtitleId'));
-                        defaultSubtitlesSelected.current = true;
-                    }
-                } else if (video.state.subtitlesTracks.length > 0) {
-                    onSubtitlesTrackSelected(localStorage.getItem('subtitleId'));
-                    defaultSubtitlesSelected.current = true;
-                }
-            } else {
-                const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
+            if (video.state.extraSubtitlesTracks.length === 0 && video.state.subtitlesTracks.length === 0) return;
 
-                const subtitlesTrack = findTrackByLang(video.state.subtitlesTracks, settings.subtitlesLanguage);
-                const extraSubtitlesTrack = findTrackByLang(video.state.extraSubtitlesTracks, settings.subtitlesLanguage);
+            const lastVideo = localStorage.getItem('lastVideo');
+            const lastSubtitleId = localStorage.getItem('subtitleId')
 
-                if (subtitlesTrack && subtitlesTrack.id) {
-                    onSubtitlesTrackSelected(subtitlesTrack.id);
+            if (lastVideo === urlParams.id && lastSubtitleId) {
+                const foundSubtitle = video.state.subtitlesTracks.find((track) => track.id === lastSubtitleId);
+                const foundExtraSubtitle = video.state.extraSubtitlesTracks.find((track) => track.id === lastSubtitleId);
+
+                if (foundSubtitle) {
+                    onSubtitlesTrackSelected(lastSubtitleId);
                     defaultSubtitlesSelected.current = true;
-                } else if (extraSubtitlesTrack && extraSubtitlesTrack.id) {
-                    onExtraSubtitlesTrackSelected(extraSubtitlesTrack.id);
+                    return;
+                } else if (foundExtraSubtitle) {
+                    onExtraSubtitlesTrackSelected(lastSubtitleId);
                     defaultSubtitlesSelected.current = true;
+                    return;
                 }
+            }
+            const findTrackByLang = (tracks, lang) => tracks.find((track) => track.lang === lang || langs.where('1', track.lang)?.[2] === lang);
+
+            const subtitlesTrack = findTrackByLang(video.state.subtitlesTracks, settings.subtitlesLanguage);
+            const extraSubtitlesTrack = findTrackByLang(video.state.extraSubtitlesTracks, settings.subtitlesLanguage);
+
+            if (subtitlesTrack && subtitlesTrack.id) {
+                onSubtitlesTrackSelected(subtitlesTrack.id);
+                defaultSubtitlesSelected.current = true;
+            } else if (extraSubtitlesTrack && extraSubtitlesTrack.id) {
+                onExtraSubtitlesTrackSelected(extraSubtitlesTrack.id);
+                defaultSubtitlesSelected.current = true;
             }
         }
     }, [video.state.subtitlesTracks, video.state.extraSubtitlesTracks]);
@@ -403,9 +410,11 @@ const Player = ({ urlParams, queryParams }) => {
     React.useEffect(() => {
         if (!defaultAudioTrackSelected.current) {
             if (video.state.audioTracks.length === 0) return;
-
-            if (localStorage.getItem('lastVideo') === urlParams.id && localStorage.getItem('audioTrackId')) {
-                onAudioTrackSelected(localStorage.getItem('audioTrackId'));
+            const lastVideo = localStorage.getItem('lastVideo');
+            const lastAudioTrackId = localStorage.getItem('audioTrackId')
+            const foundAudioTrack = video.state.audioTracks.find((track) => track.id === lastAudioTrackId);
+            if (lastVideo === urlParams.id && lastAudioTrackId && foundAudioTrack) {
+                onAudioTrackSelected(lastAudioTrackId);
                 defaultAudioTrackSelected.current = true;
                 return;
             }
