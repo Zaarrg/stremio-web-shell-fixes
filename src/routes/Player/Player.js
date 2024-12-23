@@ -499,7 +499,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'Numpad6':
-                case 'MediaTrackPrevious':
+                case 'MediaTrackNext':
                 case 'ArrowRight': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
@@ -510,7 +510,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'Numpad4':
-                case 'MediaTrackNext':
+                case 'MediaTrackPrevious':
                 case 'ArrowLeft': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
