@@ -466,6 +466,7 @@ const Player = ({ urlParams, queryParams }) => {
     React.useLayoutEffect(() => {
         const onKeyDown = (event) => {
             switch (event.code) {
+                case 'MediaPlayPause':
                 case 'Space': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.paused !== null) {
                         if (video.state.paused) {
@@ -479,6 +480,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'Numpad6':
+                case 'MediaTrackNext':
                 case 'ArrowRight': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
@@ -489,6 +491,7 @@ const Player = ({ urlParams, queryParams }) => {
                     break;
                 }
                 case 'Numpad4':
+                case 'MediaTrackPrevious':
                 case 'ArrowLeft': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;
