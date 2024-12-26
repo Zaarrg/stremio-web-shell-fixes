@@ -25,6 +25,11 @@ type Subtitle = {
     url: string,
 };
 
+type SeriesInfo = {
+    episode: number,
+    season: number,
+};
+
 type Player = {
     addon: Addon | null,
     libraryItem: LibraryItemPlayer | null,
@@ -36,10 +41,7 @@ type Player = {
         streamRequest: ResourceRequest,
         subtitlesPath: ResourceRequestPath,
     } | null,
-    seriesInfo: {
-        season: number,
-        episode: number,
-    } | null,
+    seriesInfo: SeriesInfo | null,
     subtitles: Subtitle[],
     title: string | null,
 };

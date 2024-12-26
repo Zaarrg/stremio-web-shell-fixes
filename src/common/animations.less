@@ -39,3 +39,16 @@
         transform: translateY(0%);
     }
 }
+
+.slide-left-enter {
+    transform: translateX(100%);
+}
+
+.slide-left-active {
+    transform: translateX(0%);
+    transition: transform 0.3s cubic-bezier(0.32, 0, 0.67, 0);
+}
+
+.slide-left-exit {
+    transform: translateX(100%);
+}

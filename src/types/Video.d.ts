@@ -14,4 +14,9 @@ type Video = {
     episode?: number,
     streams: Stream[],
     trailerStreams: TrailerStream[],
+    watched: boolean,
+    progress: number,
+    upcoming: boolean,
+    deepLinks: VideoDeepLinks,
+    scheduled: boolean,
 };

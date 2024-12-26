@@ -35,9 +35,9 @@ const ControlBar = ({
     onVolumeChangeRequested,
     onSeekRequested,
     onToggleSubtitlesMenu,
-    onToggleInfoMenu,
+    onToggleAudioMenu,
     onToggleSpeedMenu,
-    onToggleVideosMenu,
+    onToggleSideDrawer,
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
     ...props
@@ -48,8 +48,8 @@ const ControlBar = ({
     const onSubtitlesButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.subtitlesMenuClosePrevented = true;
     }, []);
-    const onInfoButtonMouseDown = React.useCallback((event) => {
-        event.nativeEvent.infoMenuClosePrevented = true;
+    const onAudioButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.audioMenuClosePrevented = true;
     }, []);
     const onSpeedButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.speedMenuClosePrevented = true;
@@ -151,18 +151,18 @@ const ControlBar = ({
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onToggleSpeedMenu}>
                         <Icon className={styles['icon']} name={'speed'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': metaItem === null || metaItem.type !== 'Ready' })} tabIndex={-1} onMouseDown={onInfoButtonMouseDown} onClick={onToggleInfoMenu}>
-                        <Icon className={styles['icon']} name={'about'} />
-                    </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': !chromecastServiceActive })} tabIndex={-1} onClick={onChromecastButtonClick}>
                         <Icon className={styles['icon']} name={'cast'} />
                     </Button>
-                    <Button className={classnames(styles['control-bar-button'], { 'disabled': (!Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0) && (!Array.isArray(audioTracks) || audioTracks.length === 0) })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onToggleSubtitlesMenu}>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(subtitlesTracks) || subtitlesTracks.length === 0 })} tabIndex={-1} onMouseDown={onSubtitlesButtonMouseDown} onClick={onToggleSubtitlesMenu}>
                         <Icon className={styles['icon']} name={'subtitles'} />
+                    </Button>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': !Array.isArray(audioTracks) || audioTracks.length === 0 })} tabIndex={-1} onMouseDown={onAudioButtonMouseDown} onClick={onToggleAudioMenu}>
+                        <Icon className={styles['icon']} name={'audio-tracks'} />
                     </Button>
                     {
                         metaItem?.content?.videos?.length > 0 ?
-                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onVideosButtonMouseDown} onClick={onToggleVideosMenu}>
+                            <Button className={styles['control-bar-button']} tabIndex={-1} onMouseDown={onVideosButtonMouseDown} onClick={onToggleSideDrawer}>
                                 <Icon className={styles['icon']} name={'episodes'} />
                             </Button>
                             :
@@ -200,9 +200,9 @@ ControlBar.propTypes = {
     onVolumeChangeRequested: PropTypes.func,
     onSeekRequested: PropTypes.func,
     onToggleSubtitlesMenu: PropTypes.func,
-    onToggleInfoMenu: PropTypes.func,
+    onToggleAudioMenu: PropTypes.func,
     onToggleSpeedMenu: PropTypes.func,
-    onToggleVideosMenu: PropTypes.func,
+    onToggleSideDrawer: PropTypes.func,
     onToggleOptionsMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
 };

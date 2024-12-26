@@ -61,3 +61,10 @@ type Catalog<T, D = any> = {
     installed?: boolean,
     deepLinks?: D,
 };
+
+type AudioTrack = {
+    id: string,
+    label: string,
+    lang: string,
+    origin: string,
+};
