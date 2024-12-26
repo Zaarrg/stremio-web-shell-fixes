@@ -16,6 +16,7 @@ const AudioMenu = ({ className, selectedAudioTrackId, audioTracks, onAudioTrackS
 
     const onAudioTrackClick = useCallback(({ currentTarget }: MouseEvent) => {
         const id = currentTarget.getAttribute('data-id')!;
+        localStorage.setItem('audioTrackId', id);
         onAudioTrackSelected && onAudioTrackSelected(id);
     }, [onAudioTrackSelected]);
 
