@@ -27,7 +27,7 @@
         "filter-invalid-dom-props": "3.0.1",
         "hat": "^0.0.3",
         "i18next": "^24.0.5",
-        "langs": "^2.0.0",
+        "langs": "github:Stremio/nodejs-langs",
         "lodash.debounce": "4.0.8",
         "lodash.intersection": "4.4.0",
         "lodash.isequal": "4.5.0",

@@ -1,7 +1,7 @@
 import React, { MouseEvent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
-import { Button, languageNames } from 'stremio/common';
+import { Button, languages } from 'stremio/common';
 import styles from './AudioMenu.less';
 
 type Props = {
@@ -41,13 +41,13 @@ const AudioMenu = ({ className, selectedAudioTrackId, audioTracks, onAudioTrackS
                                 data-id={id}
                                 onClick={onAudioTrackClick}
                             >
-                                <div className={styles['label']}>
-                                    {
-                                        typeof languageNames[lang] === 'string' ?
-                                            languageNames[lang]
-                                            :
-                                            lang
-                                    }
+                                <div className={styles['info']}>
+                                    <div className={styles['lang']}>
+                                        {languages.label(lang)}
+                                    </div>
+                                    <div className={styles['label']}>
+                                        {label}
+                                    </div>
                                 </div>
                                 {
                                     selectedAudioTrackId === id ?

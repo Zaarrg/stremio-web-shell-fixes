@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, CONSTANTS, comparatorWithPriorities, languageNames } = require('stremio/common');
+const { Button, CONSTANTS, comparatorWithPriorities, languages } = require('stremio/common');
 const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 const { t } = require('i18next');
@@ -163,8 +163,8 @@ const SubtitlesMenu = React.memo((props) => {
                         }
                     </Button>
                     {subtitlesLanguages.map((lang, index) => (
-                        <Button key={index} title={typeof languageNames[lang] === 'string' ? languageNames[lang] : lang} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === lang })} data-lang={lang} onClick={subtitlesLanguageOnClick}>
-                            <div className={styles['language-label']}>{typeof languageNames[lang] === 'string' ? languageNames[lang] : lang}</div>
+                        <Button key={index} title={languages.label(lang)} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === lang })} data-lang={lang} onClick={subtitlesLanguageOnClick}>
+                            <div className={styles['language-label']}>{languages.label(lang)}</div>
                             {
                                 selectedSubtitlesLanguage === lang ?
                                     <div className={styles['icon']} />
@@ -182,14 +182,15 @@ const SubtitlesMenu = React.memo((props) => {
                         <div className={styles['variants-list']}>
                             {subtitlesTracksForLanguage.map((track, index) => (
                                 <Button key={index} title={track.label} className={classnames(styles['variant-option'], { 'selected': props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id })} data-id={track.id} data-origin={track.origin} data-embedded={track.embedded} onClick={subtitlesTrackOnClick}>
-                                    <div className={styles['variant-label']}>
-                                        {
-                                            typeof track.label === 'string' && !track.label.startsWith('http') ?
-                                                track.label
-                                                :
-                                                track.lang
-                                        }
-                                        <div className={styles['variant-origin']}>{t(track.origin)}</div>
+                                    <div className={styles['info']}>
+                                        <div className={styles['variant-label']}>
+                                            {
+                                                languages.label(!track.label.startsWith('http') ? track.label : track.lang)
+                                            }
+                                        </div>
+                                        <div className={styles['variant-origin']}>
+                                            { t(track.origin) }
+                                        </div>
                                     </div>
                                     {
                                         props.selectedSubtitlesTrackId === track.id || props.selectedExtraSubtitlesTrackId === track.id ?

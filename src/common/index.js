@@ -37,6 +37,7 @@ const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
 const getVisibleChildrenRange = require('./getVisibleChildrenRange');
 const interfaceLanguages = require('./interfaceLanguages.json');
 const languageNames = require('./languageNames.json');
+const languages = require('./languages');
 const routesRegexp = require('./routesRegexp');
 const useAnimationFrame = require('./useAnimationFrame');
 const useBinaryState = require('./useBinaryState');
@@ -94,6 +95,7 @@ module.exports = {
     getVisibleChildrenRange,
     interfaceLanguages,
     languageNames,
+    languages,
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
