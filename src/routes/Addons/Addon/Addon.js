@@ -8,19 +8,43 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Button, Image } = require('stremio/common');
 const styles = require('./styles');
 
-const Addon = ({ className, id, name, version, logo, description, types, behaviorHints, installed, onToggle, onConfigure, onShare, dataset }) => {
+const Addon = ({ className, id, name, version, logo, description, types, behaviorHints, installed, onInstall, onUninstall, onConfigure, onOpen, onShare, dataset }) => {
     const { t } = useTranslation();
-    const toggleButtonOnClick = React.useCallback((event) => {
-        if (typeof onToggle === 'function') {
-            onToggle({
-                type: 'toggle',
+    const onInstallClick = React.useCallback((event) => {
+        event.stopPropagation();
+        if (typeof onInstall === 'function') {
+            onInstall({
+                type: 'install',
                 nativeEvent: event.nativeEvent,
                 reactEvent: event,
                 dataset: dataset
             });
         }
-    }, [onToggle, dataset]);
+    }, [onInstall, dataset]);
+    const onUninstallClick = React.useCallback((event) => {
+        event.stopPropagation();
+        if (typeof onUninstall === 'function') {
+            onUninstall({
+                type: 'uninstall',
+                nativeEvent: event.nativeEvent,
+                reactEvent: event,
+                dataset: dataset
+            });
+        }
+    }, [onUninstall, dataset]);
+    const onOpenClick = React.useCallback((event) => {
+        event.stopPropagation();
+        if (typeof onOpen === 'function') {
+            onOpen({
+                type: 'open',
+                nativeEvent: event.nativeEvent,
+                reactEvent: event,
+                dataset: dataset
+            });
+        }
+    }, [onOpen, dataset]);
     const configureButtonOnClick = React.useCallback((event) => {
+        event.stopPropagation();
         if (typeof onConfigure === 'function') {
             onConfigure({
                 type: 'configure',
@@ -31,6 +55,7 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
         }
     }, [onConfigure, dataset]);
     const shareButtonOnClick = React.useCallback((event) => {
+        event.stopPropagation();
         if (typeof onShare === 'function') {
             onShare({
                 type: 'share',
@@ -41,20 +66,15 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
         }
     }, [onShare, dataset]);
     const onKeyDown = React.useCallback((event) => {
-        if (event.key === 'Enter' && typeof onToggle === 'function') {
-            onToggle({
-                type: 'toggle',
-                nativeEvent: event.nativeEvent,
-                reactEvent: event,
-                dataset: dataset
-            });
+        if (event.key === 'Enter') {
+            onOpenClick(event);
         }
-    }, [onToggle, dataset]);
+    }, [onOpenClick]);
     const renderLogoFallback = React.useCallback(() => (
         <Icon className={styles['icon']} name={'addons'} />
     ), []);
     return (
-        <Button className={classnames(className, styles['addon-container'])} onKeyDown={onKeyDown}>
+        <Button className={classnames(className, styles['addon-container'])} onKeyDown={onKeyDown} onClick={onOpenClick}>
             <div className={styles['logo-container']}>
                 <Image
                     className={styles['logo']}
@@ -107,7 +127,7 @@ const Addon = ({ className, id, name, version, logo, description, types, behavio
                         className={installed ? styles['uninstall-button-container'] : styles['install-button-container']}
                         title={installed ? t('ADDON_UNINSTALL') : behaviorHints.configurationRequired ? t('ADDON_CONFIGURE') : t('ADDON_INSTALL')}
                         tabIndex={-1}
-                        onClick={!installed && behaviorHints.configurationRequired ? configureButtonOnClick : toggleButtonOnClick}
+                        onClick={installed ? onUninstallClick : behaviorHints.configurationRequired ? configureButtonOnClick : onInstallClick}
                     >
                         <div className={styles['label']}>{installed ? t('ADDON_UNINSTALL') : behaviorHints.configurationRequired ? t('ADDON_CONFIGURE') : t('ADDON_INSTALL')}</div>
                     </Button>
@@ -137,7 +157,10 @@ Addon.propTypes = {
     }),
     installed: PropTypes.bool,
     onToggle: PropTypes.func,
+    onInstall: PropTypes.func,
+    onUninstall: PropTypes.func,
     onConfigure: PropTypes.func,
+    onOpen: PropTypes.func,
     onShare: PropTypes.func,
     dataset: PropTypes.object
 };

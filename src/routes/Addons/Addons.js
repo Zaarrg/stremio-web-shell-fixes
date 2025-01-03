@@ -6,6 +6,7 @@ const classnames = require('classnames');
 const { useTranslation } = require('react-i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
 const { AddonDetailsModal, Button, Image, Multiselect, MainNavBars, TextInput, SearchBar, SharePrompt, ModalDialog, usePlatform, useBinaryState, withCoreSuspender } = require('stremio/common');
+const { useServices } = require('stremio/services');
 const Addon = require('./Addon');
 const useInstalledAddons = require('./useInstalledAddons');
 const useRemoteAddons = require('./useRemoteAddons');
@@ -17,6 +18,7 @@ const { AddonPlaceholder } = require('./AddonPlaceholder');
 const Addons = ({ urlParams, queryParams }) => {
     const { t } = useTranslation();
     const platform = usePlatform();
+    const { core } = useServices();
     const installedAddons = useInstalledAddons(urlParams);
     const remoteAddons = useRemoteAddons(urlParams);
     const [addonDetailsTransportUrl, setAddonDetailsTransportUrl] = useAddonDetailsTransportUrl(urlParams, queryParams);
@@ -57,12 +59,30 @@ const Addons = ({ urlParams, queryParams }) => {
     const onAddonShare = React.useCallback((event) => {
         setSharedAddon(event.dataset.addon);
     }, []);
-    const onAddonToggle = React.useCallback((event) => {
-        setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
-    }, [setAddonDetailsTransportUrl]);
+    const onAddonInstall = React.useCallback((event) => {
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'InstallAddon',
+                args: event.dataset.addon,
+            }
+        });
+    }, []);
+    const onAddonUninstall = React.useCallback((event) => {
+        core.transport.dispatch({
+            action: 'Ctx',
+            args: {
+                action: 'UninstallAddon',
+                args: event.dataset.addon,
+            }
+        });
+    }, []);
     const onAddonConfigure = React.useCallback((event) => {
         platform.openExternal(event.dataset.addon.transportUrl.replace('manifest.json', 'configure'));
     }, []);
+    const onAddonOpen = React.useCallback((event) => {
+        setAddonDetailsTransportUrl(event.dataset.addon.transportUrl);
+    }, [setAddonDetailsTransportUrl]);
     const closeAddonDetails = React.useCallback(() => {
         setAddonDetailsTransportUrl(null);
     }, [setAddonDetailsTransportUrl]);
@@ -135,8 +155,10 @@ const Addons = ({ urlParams, queryParams }) => {
                                                     types={addon.manifest.types}
                                                     behaviorHints={addon.manifest.behaviorHints}
                                                     installed={addon.installed}
-                                                    onToggle={onAddonToggle}
+                                                    onInstall={onAddonInstall}
+                                                    onUninstall={onAddonUninstall}
                                                     onConfigure={onAddonConfigure}
+                                                    onOpen={onAddonOpen}
                                                     onShare={onAddonShare}
                                                     dataset={{ addon }}
                                                 />
@@ -173,8 +195,10 @@ const Addons = ({ urlParams, queryParams }) => {
                                                         types={addon.manifest.types}
                                                         behaviorHints={addon.manifest.behaviorHints}
                                                         installed={addon.installed}
-                                                        onToggle={onAddonToggle}
+                                                        onInstall={onAddonInstall}
+                                                        onUninstall={onAddonUninstall}
                                                         onConfigure={onAddonConfigure}
+                                                        onOpen={onAddonOpen}
                                                         onShare={onAddonShare}
                                                         dataset={{ addon }}
                                                     />

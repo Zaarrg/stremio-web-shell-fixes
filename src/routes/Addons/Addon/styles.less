@@ -8,9 +8,15 @@
     flex-direction: row;
     align-items: flex-start;
     padding: 1.5rem;
+    border: 0.15rem solid transparent;
     border-radius: var(--border-radius);
     background-color: var(--overlay-color);
-    cursor: inherit;
+    transition: border-color 0.1s ease-out;
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--overlay-color);
+    }
 
     .logo-container {
         flex: none;
