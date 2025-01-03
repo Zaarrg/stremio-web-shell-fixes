@@ -632,8 +632,6 @@ const Player = ({ urlParams, queryParams }) => {
             video.events.off('extraSubtitlesTrackLoaded', onExtraSubtitlesTrackLoaded);
             video.events.off('implementationChanged', onImplementationChanged);
 
-            if (document.querySelector('body').style.background) document.querySelector('body').style.background = '';
-            if (document.getElementById('app').style.background) document.getElementById('app').style.background = '';
             localStorage.setItem('lastVideo', urlParams.id);
         };
     }, []);
