@@ -588,6 +588,97 @@ const Player = ({ urlParams, queryParams }) => {
                     closeMenus();
                     break;
                 }
+                default: {
+                    /*
+                      * Mpv input.conf wants literal keys, we do the following to convert:
+                      * 1) Map special event.code values to mpv-friendly names (e.g., ArrowLeft → LEFT).
+                      * 2) Convert modifiers (Shift, Ctrl, Alt, Meta) into mpv’s SHIFT+, CTRL+, ALT+, META+ prefixes.
+                      * 3) For plain letters or digits, remove "Key", "Digit", "Numpad", etc. from event.code.
+                      * 4) Ensure correct casing.
+                      *
+                      * Note that mpv accepts either symbolic names (e.g., LEFT, SHIFT+LEFT) or literal characters
+                      * (e.g. "a", or "!" if Shift+1). According to mpv docs, either approach works
+                      * We'll generally use modifiers (e.g., SHIFT+1) for shifted digits or punctuation, plus
+                      * symbolic names for non-character keys.
+                    */
+                    const specialMap = {
+                        'ArrowLeft': 'LEFT',
+                        'ArrowRight': 'RIGHT',
+                        'ArrowUp': 'UP',
+                        'ArrowDown': 'DOWN',
+                        'Space': 'SPACE',
+                        'Enter': 'ENTER',
+                        'Escape': 'ESC',
+                        'Backspace': 'BS',
+                        'Tab': 'TAB',
+                        'PrintScreen': 'PRINT_SCREEN',
+                        'ScrollLock': 'SCROLL_LOCK',
+                        'Pause': 'PAUSE',
+                        'Insert': 'INSERT',
+                        'Home': 'HOME',
+                        'PageUp': 'PAGE_UP',
+                        'Delete': 'DELETE',
+                        'End': 'END',
+                        'PageDown': 'PAGE_DOWN',
+                        'NumpadAdd': 'KP_PLUS',
+                        'NumpadSubtract': 'KP_MINUS',
+                        'NumpadMultiply': 'KP_MULTIPLY',
+                        'NumpadDivide': 'KP_DIVIDE',
+                        'NumpadEnter': 'KP_ENTER',
+                        'NumpadDecimal': 'KP_PERIOD',
+                        'Numpad0': 'KP0',
+                        'Numpad1': 'KP1',
+                        'Numpad2': 'KP2',
+                        'Numpad3': 'KP3',
+                        'Numpad4': 'KP4',
+                        'Numpad5': 'KP5',
+                        'Numpad6': 'KP6',
+                        'Numpad7': 'KP7',
+                        'Numpad8': 'KP8',
+                        'Numpad9': 'KP9',
+                        'Comma': ',',
+                        'Period': '.',
+                        'Slash': '/',
+                        'Semicolon': ';',
+                        'Quote': "'",
+                        'BracketLeft': '[',
+                        'BracketRight': ']',
+                        'Backslash': '\\',
+                        'Minus': '-',
+                        'Equal': '=',
+                        'Backquote': '`',
+                        'CapsLock': ''
+                    };
+
+                    if (['Shift', 'Control', 'Alt', 'Meta'].includes(event.key)) {
+                        break;
+                    }
+                    let baseKey = specialMap[event.code];
+                    if (!baseKey) {
+                        baseKey = event.code
+                            .replace(/^Key/, '')
+                            .replace(/^Digit/, '')
+                            .replace(/^Numpad/, '');
+                    }
+
+                    const modifiers = [];
+                    if (event.shiftKey && event.code !== 'Shift') modifiers.push('SHIFT');
+                    if (event.ctrlKey && event.code !== 'Control') modifiers.push('CTRL');
+                    if (event.altKey && event.code !== 'Alt') modifiers.push('ALT');
+                    if (event.metaKey && event.code !== 'Meta') modifiers.push('META');
+
+                    let finalKey;
+                    if (modifiers.length > 0) {
+                        finalKey = modifiers.join('+') + '+' + baseKey;
+                    } else {
+                        finalKey = /^[A-Z0-9]$/i.test(baseKey) ? baseKey.toLowerCase() : baseKey;
+                    }
+
+                    if (finalKey) {
+                        shell.transport.send('mpv-command', ['keypress', finalKey]);
+                    }
+                    break;
+                }
             }
         };
         const onKeyUp = (event) => {
