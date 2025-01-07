@@ -3,5 +3,4 @@ declare module '*.less' {
     export = resource;
 }
 
-declare module 'stremio/common';
-declare module 'stremio/common/Button';
+declare module 'stremio/components/NavBar';

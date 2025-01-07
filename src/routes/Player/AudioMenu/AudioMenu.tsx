@@ -1,7 +1,8 @@
 import React, { MouseEvent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
-import { Button, languages } from 'stremio/common';
+import { languages } from 'stremio/common';
+import { Button } from 'stremio/components';
 import styles from './AudioMenu.less';
 
 type Props = {

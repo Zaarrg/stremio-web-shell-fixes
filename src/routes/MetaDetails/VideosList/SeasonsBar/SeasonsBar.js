@@ -5,10 +5,9 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { t } = require('i18next');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const { Button } = require('stremio/common');
+const { Button, MultiselectMenu } = require('stremio/components');
 const SeasonsBarPlaceholder = require('./SeasonsBarPlaceholder');
 const styles = require('./styles');
-const { MultiselectMenu } = require('stremio/common');
 
 const SeasonsBar = ({ className, seasons, season, onSelect }) => {
     const options = React.useMemo(() => {

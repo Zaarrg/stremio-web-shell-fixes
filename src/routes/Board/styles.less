@@ -1,13 +1,13 @@
-// Copyright (C) 2017-2023 Smart code 203358507
+// Copyright (C) 2017-2024 Smart code 203358507
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 @import (reference) '~stremio/common/screen-sizes.less';
 
-:import('~stremio/common/MetaRow/styles.less') {
+:import('~stremio/components/MetaRow/styles.less') {
     meta-item: meta-item;
 }
 
-:import('~stremio/common/MetaRow/MetaRowPlaceholder/styles.less') {
+:import('~stremio/components/MetaRow/MetaRowPlaceholder/styles.less') {
     meta-item-placeholder: meta-item;
 }
 
@@ -23,8 +23,8 @@
         background: transparent;
 
         .board-content {
-            width: 100%;
             height: 100%;
+            width: 100%;
             padding: 0 1rem;
             overflow-y: auto;
 
@@ -38,6 +38,7 @@
     .board-warning-container {
         flex: none;
         align-self: stretch;
+        margin-bottom: var(--calculated-bottom-safe-inset, 0rem);
     }
 }
 
@@ -191,15 +192,7 @@
         z-index: 0;
 
         .board-content-container {
-            &:only-child {
-                .board-content {
-                    height: 100%;
-                }
-            }
-            
             .board-content {
-                height: calc(100% - 4rem);
-
                 .board-row {
                     margin-bottom: 1.5rem;
                 }
@@ -226,8 +219,9 @@
             position: absolute;
             left: 0;
             right: 0;
-            bottom: var(--vertical-nav-bar-size);
+            bottom: calc(var(--vertical-nav-bar-size) + var(--calculated-bottom-safe-inset, 0rem));
             height: 4rem;
+            margin-bottom: 0rem;
         }
     }
 }

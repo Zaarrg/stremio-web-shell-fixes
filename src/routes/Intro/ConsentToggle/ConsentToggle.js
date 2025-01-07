@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, Toggle } = require('stremio/common');
+const { Button, Toggle } = require('stremio/components');
 const styles = require('./styles');
 
 const ConsentToggle = React.forwardRef(({ className, label, link, href, onToggle, ...props }, ref) => {

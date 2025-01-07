@@ -5,7 +5,8 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
-const { Slider, Button, useBinaryState } = require('stremio/common');
+const { useBinaryState } = require('stremio/common');
+const { Button, Slider } = require('stremio/components');
 const formatTime = require('./formatTime');
 const styles = require('./styles');
 

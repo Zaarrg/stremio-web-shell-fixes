@@ -1,36 +1,8 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
-const AddonDetailsModal = require('./AddonDetailsModal');
-const { default: BottomSheet } = require('./BottomSheet');
-const Button = require('./Button');
-const Toggle = require('./Toggle');
-const { default: Chips } = require('./Chips');
-const ColorInput = require('./ColorInput');
-const ContinueWatchingItem = require('./ContinueWatchingItem');
-const DelayedRenderer = require('./DelayedRenderer');
-const Image = require('./Image');
-const LibItem = require('./LibItem');
-const MainNavBars = require('./MainNavBars');
-const MetaItem = require('./MetaItem');
-const MetaPreview = require('./MetaPreview');
-const MetaRow = require('./MetaRow');
-const ModalDialog = require('./ModalDialog');
-const Multiselect = require('./Multiselect');
-const { default: MultiselectMenu } = require('./MultiselectMenu');
-const { HorizontalNavBar, VerticalNavBar } = require('./NavBar');
-const { default: HorizontalScroll } = require('./HorizontalScroll');
 const { PlatformProvider, usePlatform } = require('./Platform');
-const PlayIconCircleCentered = require('./PlayIconCircleCentered');
-const Popup = require('./Popup');
-const SearchBar = require('./SearchBar');
-const StreamingServerWarning = require('./StreamingServerWarning');
-const SharePrompt = require('./SharePrompt');
-const Slider = require('./Slider');
-const { default: TextInput } = require('./TextInput');
 const { ToastProvider, useToast } = require('./Toast');
 const { TooltipProvider, Tooltip } = require('./Tooltips');
-const { default: Transition } = require('./Transition');
-const Video = require('./Video');
 const comparatorWithPriorities = require('./comparatorWithPriorities');
 const CONSTANTS = require('./CONSTANTS');
 const { withCoreSuspender, useCoreSuspender } = require('./CoreSuspender');
@@ -50,44 +22,14 @@ const useProfile = require('./useProfile');
 const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
 const useTranslate = require('./useTranslate');
-const EventModal = require('./EventModal');
 
 module.exports = {
-    AddonDetailsModal,
-    BottomSheet,
-    Button,
-    Toggle,
-    Chips,
-    ColorInput,
-    ContinueWatchingItem,
-    DelayedRenderer,
-    Image,
-    LibItem,
-    MainNavBars,
-    MetaItem,
-    MetaPreview,
-    MetaRow,
-    ModalDialog,
-    Multiselect,
-    MultiselectMenu,
-    HorizontalNavBar,
-    HorizontalScroll,
-    VerticalNavBar,
     PlatformProvider,
     usePlatform,
-    PlayIconCircleCentered,
-    Popup,
-    SearchBar,
-    StreamingServerWarning,
-    SharePrompt,
-    Slider,
-    TextInput,
     ToastProvider,
     useToast,
     TooltipProvider,
     Tooltip,
-    Transition,
-    Video,
     comparatorWithPriorities,
     CONSTANTS,
     withCoreSuspender,
@@ -108,5 +50,4 @@ module.exports = {
     useStreamingServer,
     useTorrent,
     useTranslate,
-    EventModal,
 };

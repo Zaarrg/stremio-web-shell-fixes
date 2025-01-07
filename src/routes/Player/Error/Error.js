@@ -5,7 +5,7 @@ const { useTranslation } = require('react-i18next');
 const PropTypes = require('prop-types');
 const classNames = require('classnames');
 const { default: Icon } = require('@stremio/stremio-icons/react');
-const Button = require('stremio/common/Button');
+const { Button } = require('stremio/components');
 const styles = require('./styles');
 
 const Error = ({ className, code, message, stream }) => {

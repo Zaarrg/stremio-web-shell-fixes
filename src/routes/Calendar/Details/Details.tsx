@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import Icon from '@stremio/stremio-icons/react';
-import Button from 'stremio/common/Button';
+import { Button } from 'stremio/components';
 import styles from './Details.less';
 
 type Props = {

@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import classNames from 'classnames';
-import { Button, Image, HorizontalScroll } from 'stremio/common';
+import { Button, HorizontalScroll, Image } from 'stremio/components';
 import styles from './Cell.less';
 
 type Props = {

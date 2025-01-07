@@ -4,7 +4,9 @@ const React = require('react');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useTranslation } = require('react-i18next');
-const { MainNavBars, MetaRow, ContinueWatchingItem, MetaItem, StreamingServerWarning, useStreamingServer, useNotifications, withCoreSuspender, getVisibleChildrenRange, EventModal } = require('stremio/common');
+const { useStreamingServer, useNotifications, withCoreSuspender, getVisibleChildrenRange } = require('stremio/common');
+const { ContinueWatchingItem, EventModal, MainNavBars, MetaItem, MetaRow } = require('stremio/components');
+const StreamingServerWarning = require('./StreamingServerWarning');
 const useBoard = require('./useBoard');
 const useContinueWatchingPreview = require('./useContinueWatchingPreview');
 const styles = require('./styles');
@@ -67,14 +69,17 @@ const Board = () => {
                                 );
                             }
                             case 'Err': {
-                                return (
-                                    <MetaRow
-                                        key={index}
-                                        className={classnames(styles['board-row'], 'animation-fade-in')}
-                                        catalog={catalog}
-                                        message={catalog.content.content}
-                                    />
-                                );
+                                if (catalog.content.content !== 'EmptyContent') {
+                                    return (
+                                        <MetaRow
+                                            key={index}
+                                            className={classnames(styles['board-row'], 'animation-fade-in')}
+                                            catalog={catalog}
+                                            message={catalog.content.content}
+                                        />
+                                    );
+                                }
+                                return null;
                             }
                             default: {
                                 return (

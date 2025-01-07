@@ -4,7 +4,8 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useServices } = require('stremio/services');
-const { VerticalNavBar, HorizontalNavBar, MetaPreview, ModalDialog, Image, DelayedRenderer, withCoreSuspender } = require('stremio/common');
+const { withCoreSuspender } = require('stremio/common');
+const { VerticalNavBar, HorizontalNavBar, DelayedRenderer, Image, MetaPreview, ModalDialog } = require('stremio/components');
 const StreamsList = require('./StreamsList');
 const VideosList = require('./VideosList');
 const useMetaDetails = require('./useMetaDetails');
@@ -76,8 +77,29 @@ const MetaDetails = ({ urlParams, queryParams }) => {
         setSeason(event.value);
     }, [setSeason]);
     const renderBackgroundImageFallback = React.useCallback(() => null, []);
+    const renderBackground = React.useMemo(() => !!(
+        metaPath &&
+        metaDetails?.metaItem &&
+        metaDetails.metaItem.content.type !== 'Loading' &&
+        typeof metaDetails.metaItem.content.content?.background === 'string' &&
+        metaDetails.metaItem.content.content.background.length > 0
+    ), [metaPath, metaDetails]);
+
     return (
         <div className={styles['metadetails-container']}>
+            {
+                renderBackground ?
+                    <div className={styles['background-image-layer']}>
+                        <Image
+                            className={styles['background-image']}
+                            src={metaDetails.metaItem.content.content.background}
+                            renderFallback={renderBackgroundImageFallback}
+                            alt={' '}
+                        />
+                    </div>
+                    :
+                    null
+            }
             <HorizontalNavBar
                 className={styles['nav-bar']}
                 backButton={true}
@@ -120,20 +142,6 @@ const MetaDetails = ({ urlParams, queryParams }) => {
                                     <MetaPreview.Placeholder className={styles['meta-preview']} />
                                     :
                                     <React.Fragment>
-                                        {
-                                            typeof metaDetails.metaItem.content.content.background === 'string' &&
-                                                metaDetails.metaItem.content.content.background.length > 0 ?
-                                                <div className={styles['background-image-layer']}>
-                                                    <Image
-                                                        className={styles['background-image']}
-                                                        src={metaDetails.metaItem.content.content.background}
-                                                        renderFallback={renderBackgroundImageFallback}
-                                                        alt={' '}
-                                                    />
-                                                </div>
-                                                :
-                                                null
-                                        }
                                         <MetaPreview
                                             className={classnames(styles['meta-preview'], 'animation-fade-in')}
                                             name={metaDetails.metaItem.content.content.name}
