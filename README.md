@@ -24,6 +24,7 @@
 - Autoplay fix. On end of video next video is played.
 - Background fix. Fixed page transparency not resetting.
 - Subtitle Selection remembers what was selected in last video. Useful for Binge Watching.
+- Vertical Subtitle Position Support.
 
 ## Build
 
