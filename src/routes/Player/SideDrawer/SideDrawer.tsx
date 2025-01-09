@@ -5,7 +5,8 @@ import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
 import { useServices } from 'stremio/services';
 import { CONSTANTS } from 'stremio/common';
-import { MetaPreview, Video } from 'stremio/components';
+import MetaPreview from 'stremio/common/MetaPreview/MetaPreview';
+import Video from 'stremio/common/Video/Video';
 import SeasonsBar from 'stremio/routes/MetaDetails/VideosList/SeasonsBar';
 import styles from './SideDrawer.less';
 

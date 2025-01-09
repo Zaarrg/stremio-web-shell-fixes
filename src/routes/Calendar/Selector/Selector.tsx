@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo } from 'react';
 import Icon from '@stremio/stremio-icons/react';
-import { Button } from 'stremio/components';
+import { Button } from 'stremio/common';
 import useCalendarDate from '../useCalendarDate';
 import styles from './Selector.less';
 

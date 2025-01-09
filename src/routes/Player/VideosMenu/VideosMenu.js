@@ -4,7 +4,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { useServices } = require('stremio/services');
-const { Video } = require('stremio/components');
+const { Video } = require('stremio/common');
 const styles = require('./styles');
 
 const VideosMenu = ({ className, metaItem, seriesInfo }) => {

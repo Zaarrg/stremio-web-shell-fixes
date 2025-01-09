@@ -1,8 +1,7 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { useMemo, useState } from 'react';
-import { useProfile, withCoreSuspender } from 'stremio/common';
-import { MainNavBars, BottomSheet } from 'stremio/components';
+import { MainNavBars, BottomSheet, useProfile, withCoreSuspender } from 'stremio/common';
 import Selector from './Selector';
 import Table from './Table';
 import List from './List';
@@ -55,7 +54,7 @@ const Calendar = ({ urlParams }: Props) => {
                             profile={profile}
                             onChange={setSelected}
                         />
-                        <BottomSheet title={detailsTitle} show={!!selected} onClose={onDetailsClose}>
+                        <BottomSheet title={detailsTitle} show={selected} onClose={onDetailsClose}>
                             <Details
                                 selected={selected}
                                 items={calendar.items}

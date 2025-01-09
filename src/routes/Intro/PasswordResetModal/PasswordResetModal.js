@@ -3,8 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { useRouteFocused } = require('stremio-router');
-const { usePlatform } = require('stremio/common');
-const { ModalDialog } = require('stremio/components');
+const { ModalDialog, usePlatform } = require('stremio/common');
 const CredentialsTextInput = require('../CredentialsTextInput');
 const styles = require('./styles');
 

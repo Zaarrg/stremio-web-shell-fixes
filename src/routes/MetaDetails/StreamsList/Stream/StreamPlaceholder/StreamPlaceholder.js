@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const PlayIconCircleCentered = require('./PlayIconCircleCentered');
+const PlayIconCircleCentered = require('stremio/common/PlayIconCircleCentered');
 const styles = require('./styles');
 
 const StreamPlaceholder = ({ className }) => {
