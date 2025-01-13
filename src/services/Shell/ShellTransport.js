@@ -19,10 +19,12 @@ const QtMsgTypes = {
 };
 const QtObjId = 'transport'; // the ID of our transport object
 
-window.initShellComm = function () {
-    delete window.initShellComm;
-    shellEvents.emit('availabilityChanged');
-};
+if (window.qt) {
+    window.initShellComm = function () {
+        delete window.initShellComm;
+        shellEvents.emit('availabilityChanged');
+    };
+}
 
 const initialize = () => {
     if(!window.qt) return Promise.reject('Qt API not found');

@@ -164,10 +164,7 @@ const StreamsList = ({ className, video, ...props }) => {
                                 </div>
                             </React.Fragment>
             }
-            <Button className={styles['install-button-container']} title={t('ADDON_CATALOGUE_MORE')} href={'#/addons'}>
-                <Icon className={styles['icon']} name={'addons'} />
-                <div className={styles['label']}>{ t('ADDON_CATALOGUE_MORE') }</div>
-            </Button>
+
         </div>
     );
 };

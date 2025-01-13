@@ -10,7 +10,9 @@ const { PlatformProvider, ToastProvider, TooltipProvider, CONSTANTS, withCoreSus
 const ServicesToaster = require('./ServicesToaster');
 const DeepLinkHandler = require('./DeepLinkHandler');
 const SearchParamsHandler = require('./SearchParamsHandler');
+const PipHandler = require('./PipHandler');
 const ErrorDialog = require('./ErrorDialog');
+const UpdateDialogHandler = require('./UpdateDialogHandler');
 const withProtectedRoutes = require('./withProtectedRoutes');
 const routerViewsConfig = require('./routerViewsConfig');
 const styles = require('./styles');
@@ -165,6 +167,12 @@ const App = () => {
                             <PlatformProvider>
                                 <ToastProvider className={styles['toasts-container']}>
                                     <TooltipProvider className={styles['tooltip-container']}>
+                                        {window.chrome && window.chrome.webview && (
+                                            <>
+                                                <UpdateDialogHandler className={styles['update-container']} />
+                                                <PipHandler />
+                                            </>
+                                        )}
                                         <ServicesToaster />
                                         <DeepLinkHandler />
                                         <SearchParamsHandler />

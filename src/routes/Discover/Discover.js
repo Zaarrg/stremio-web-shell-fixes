@@ -101,17 +101,7 @@ const Discover = ({ urlParams, queryParams }) => {
                             <Icon className={styles['filter-icon']} name={'filters'} />
                         </Button>
                     </div>
-                    {
-                        discover.catalog !== null && !discover.catalog.installed ?
-                            <div className={styles['missing-addon-warning-container']}>
-                                <div className={styles['warning-label']}>Addon is not installed. Install now?</div>
-                                <Button className={styles['install-button']} title={'Install addon'} onClick={openAddonModal}>
-                                    <div className={styles['label']}>Install</div>
-                                </Button>
-                            </div>
-                            :
-                            null
-                    }
+
                     {
                         discover.catalog === null ?
                             <DelayedRenderer delay={500}>

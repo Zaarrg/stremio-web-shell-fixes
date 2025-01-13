@@ -376,7 +376,7 @@ const Player = ({ urlParams, queryParams }) => {
             if (video.state.extraSubtitlesTracks.length === 0 && video.state.subtitlesTracks.length === 0) return;
 
             const lastVideo = localStorage.getItem('lastVideo');
-            const lastSubtitleId = localStorage.getItem('subtitleId')
+            const lastSubtitleId = localStorage.getItem('subtitleId');
 
             if (lastVideo === urlParams.id && lastSubtitleId) {
                 const foundSubtitle = video.state.subtitlesTracks.find((track) => track.id === lastSubtitleId);
@@ -411,7 +411,7 @@ const Player = ({ urlParams, queryParams }) => {
         if (!defaultAudioTrackSelected.current) {
             if (video.state.audioTracks.length === 0) return;
             const lastVideo = localStorage.getItem('lastVideo');
-            const lastAudioTrackId = localStorage.getItem('audioTrackId')
+            const lastAudioTrackId = localStorage.getItem('audioTrackId');
             const foundAudioTrack = video.state.audioTracks.find((track) => track.id === lastAudioTrackId);
             if (lastVideo === urlParams.id && lastAudioTrackId && foundAudioTrack) {
                 onAudioTrackSelected(lastAudioTrackId);

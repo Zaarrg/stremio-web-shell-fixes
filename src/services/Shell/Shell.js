@@ -2,6 +2,7 @@
 
 const EventEmitter = require('eventemitter3');
 const ShellTransport = require('./ShellTransport');
+const WebViewTransport = require('./WebViewTransport');
 
 function Shell() {
     let active = false;
@@ -68,7 +69,11 @@ function Shell() {
 
         active = false;
         starting = true;
-        transport = new ShellTransport();
+        if (window.qt && (!window.chrome || !window.chrome.webview)) {
+            transport = new ShellTransport();
+        } else {
+            transport = new WebViewTransport();
+        }
         transport.on('init', onTransportInit);
         transport.on('init-error', onTransportInitError);
         onStateChanged();
