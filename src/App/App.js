@@ -167,7 +167,7 @@ const App = () => {
                             <PlatformProvider>
                                 <ToastProvider className={styles['toasts-container']}>
                                     <TooltipProvider className={styles['tooltip-container']}>
-                                        {window.chrome && window.chrome.webview && (
+                                        {services.shell.active && (
                                             <>
                                                 <UpdateDialogHandler className={styles['update-container']} />
                                                 <PipHandler />

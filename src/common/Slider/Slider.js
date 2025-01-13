@@ -89,18 +89,22 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
     }, []);
 
     const handleMouseMove = React.useCallback((event) => {
-        const hoveredSeconds = calculateValueForMouseX(event.clientX) / 1000;
-        const x = event.clientX;
-        const y = event.clientY;
-        shell.transport.send('seek-hover', [
-            hoveredSeconds.toString(),
-            x.toString(),
-            y.toString()
-        ]);
+        if (shell.active) {
+            const hoveredSeconds = calculateValueForMouseX(event.clientX) / 1000;
+            const x = event.clientX;
+            const y = event.clientY;
+            shell.transport.send('seek-hover', [
+                hoveredSeconds.toString(),
+                x.toString(),
+                y.toString()
+            ]);
+        }
     }, [calculateValueForMouseX]);
 
     const handleMouseLeave = React.useCallback(() => {
-        shell.transport.send('seek-leave', {});
+        if (shell.active) {
+            shell.transport.send('seek-leave', {});
+        }
     }, []);
 
     React.useLayoutEffect(() => {
@@ -120,10 +124,8 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
             ref={sliderContainerRef}
             className={classnames(className, styles['slider-container'], { 'disabled': disabled })}
             onMouseDown={onMouseDown}
-            {...(window.chrome && window.chrome.webview && {
-                onMouseMove: handleMouseMove,
-                onMouseLeave: handleMouseLeave,
-            })}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
         >
             <div className={styles['layer']}>
                 <div className={styles['track']} />

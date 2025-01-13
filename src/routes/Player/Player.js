@@ -674,7 +674,7 @@ const Player = ({ urlParams, queryParams }) => {
                         finalKey = /^[A-Z0-9]$/i.test(baseKey) ? baseKey.toLowerCase() : baseKey;
                     }
 
-                    if (finalKey) {
+                    if (finalKey && shell.active) {
                         shell.transport.send('mpv-command', ['keypress', finalKey]);
                     }
                     break;
