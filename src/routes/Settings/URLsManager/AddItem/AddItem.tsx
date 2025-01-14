@@ -1,9 +1,8 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
 import React, { ChangeEvent, useCallback, useState } from 'react';
-import Button from 'stremio/common/Button';
 import Icon from '@stremio/stremio-icons/react';
-import TextInput from 'stremio/common/TextInput';
+import { Button, TextInput } from 'stremio/components';
 import styles from './AddItem.less';
 
 type Props = {

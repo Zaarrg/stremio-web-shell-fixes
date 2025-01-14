@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
-const { Slider } = require('stremio/common');
+const { Slider } = require('stremio/components');
 const styles = require('./styles');
 
 const VolumeSlider = ({ className, volume, onVolumeChangeRequested }) => {

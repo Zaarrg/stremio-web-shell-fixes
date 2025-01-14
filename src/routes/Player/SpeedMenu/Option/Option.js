@@ -3,7 +3,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button } = require('stremio/common');
+const { Button } = require('stremio/components');
 const styles = require('./styles');
 
 const OptionButton = ({ className, value, selected, onSelect }) => {

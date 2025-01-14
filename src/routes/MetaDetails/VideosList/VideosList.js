@@ -5,7 +5,7 @@ const PropTypes = require('prop-types');
 const classnames = require('classnames');
 const { t } = require('i18next');
 const { useServices } = require('stremio/services');
-const { Image, SearchBar, Toggle, Video } = require('stremio/common');
+const { Image, SearchBar, Toggle, Video } = require('stremio/components');
 const SeasonsBar = require('./SeasonsBar');
 const styles = require('./styles');
 

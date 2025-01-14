@@ -1,7 +1,7 @@
 // Copyright (C) 2017-2023 Smart code 203358507
 
 const React = require('react');
-const { Image, HorizontalNavBar } = require('stremio/common');
+const { HorizontalNavBar, Image } = require('stremio/components');
 const styles = require('./styles');
 
 const NotFound = () => {

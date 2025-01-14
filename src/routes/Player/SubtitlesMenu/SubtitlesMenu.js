@@ -3,7 +3,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Button, CONSTANTS, comparatorWithPriorities, languages } = require('stremio/common');
+const { CONSTANTS, comparatorWithPriorities, languages } = require('stremio/common');
+const { Button } = require('stremio/components');
 const DiscreteSelectInput = require('./DiscreteSelectInput');
 const styles = require('./styles');
 const { t } = require('i18next');
