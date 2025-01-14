@@ -2,7 +2,7 @@
 
 const EventEmitter = require('eventemitter3');
 
-function DragAndDrop({ core }) {
+function DragAndDrop({ core, shell }) {
     let active = false;
 
     const events = new EventEmitter();
@@ -11,11 +11,11 @@ function DragAndDrop({ core }) {
         event.preventDefault();
     }
     async function onDrop(event) {
-        event.preventDefault();
         if (event.dataTransfer.files instanceof FileList && event.dataTransfer.files.length > 0) {
             const file = event.dataTransfer.files[0];
             switch (file.type) {
                 case 'application/x-bittorrent': {
+                    event.preventDefault();
                     try {
                         const torrent = await file.arrayBuffer();
                         core.transport.dispatch({
@@ -37,15 +37,28 @@ function DragAndDrop({ core }) {
                     break;
                 }
                 default: {
-                    events.emit('error', {
-                        message: 'Unsupported file',
-                        file: {
-                            name: file.name,
-                            type: file.type
-                        }
-                    });
+                    if (shell.active && !window.qt.webChannelTransport) {
+                        events.emit('success', {
+                            message: 'Attempting local playback',
+                            file: {
+                                name: file.name,
+                                type: file.type
+                            }
+                        });
+                    } else {
+                        event.preventDefault();
+                        events.emit('error', {
+                            message: 'Unsupported file',
+                            file: {
+                                name: file.name,
+                                type: file.type
+                            }
+                        });
+                    }
                 }
             }
+        } else {
+            event.preventDefault();
         }
     }
     function onStateChanged() {

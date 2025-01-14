@@ -89,7 +89,7 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
     }, []);
 
     const handleMouseMove = React.useCallback((event) => {
-        if (shell.active) {
+        if (shell.active && className.startsWith('slider')) {
             const hoveredSeconds = calculateValueForMouseX(event.clientX) / 1000;
             const x = event.clientX;
             const y = event.clientY;
@@ -102,7 +102,7 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
     }, [calculateValueForMouseX]);
 
     const handleMouseLeave = React.useCallback(() => {
-        if (shell.active) {
+        if (shell.active && className.startsWith('slider')) {
             shell.transport.send('seek-leave', {});
         }
     }, []);

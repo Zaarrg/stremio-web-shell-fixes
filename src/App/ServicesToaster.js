@@ -68,11 +68,21 @@ const ServicesToaster = () => {
                 timeout: 4000
             });
         };
+        const onDragAndDropSuccess = (success) => {
+            toast.show({
+                type: 'success',
+                title: success.message,
+                message: success.file?.name,
+                timeout: 4000
+            });
+        };
         core.transport.on('CoreEvent', onCoreEvent);
         dragAndDrop.on('error', onDragAndDropError);
+        dragAndDrop.on('success', onDragAndDropSuccess);
         return () => {
             core.transport.off('CoreEvent', onCoreEvent);
             dragAndDrop.off('error', onDragAndDropError);
+            dragAndDrop.off('success', onDragAndDropSuccess);
         };
     }, []);
     return null;

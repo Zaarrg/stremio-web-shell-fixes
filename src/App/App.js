@@ -29,12 +29,13 @@ const App = () => {
             appVersion: process.env.VERSION,
             shellVersion: null
         });
+        const shell = new Shell({ core });
         return {
             core,
-            shell: new Shell(),
+            shell,
             chromecast: new Chromecast(),
             keyboardShortcuts: new KeyboardShortcuts(),
-            dragAndDrop: new DragAndDrop({ core })
+            dragAndDrop: new DragAndDrop({ core, shell })
         };
     }, []);
     const [initialized, setInitialized] = React.useState(false);

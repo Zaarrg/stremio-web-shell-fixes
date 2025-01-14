@@ -116,7 +116,7 @@ const Player = ({ urlParams, queryParams }) => {
             toast.show({
                 type: 'error',
                 title: t('ERROR'),
-                message: error.message,
+                message: error.message ? error.message : error,
                 timeout: 3000
             });
         }

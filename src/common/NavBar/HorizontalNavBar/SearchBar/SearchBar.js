@@ -50,12 +50,15 @@ const SearchBar = React.memo(({ className, query, active }) => {
 
     const queryInputOnChange = React.useCallback(() => {
         const value = searchInputRef.current.value;
-        setCurrentQuery(value);
         openHistory();
-        try {
-            createTorrentFromMagnet(value);
-        } catch (error) {
-            console.error('Failed to create torrent from magnet:', error);
+        if (value.startsWith('magnet:')) {
+            try {
+                createTorrentFromMagnet(value);
+            } catch (error) {
+                console.error('Failed to create torrent from magnet:', error);
+            }
+        } else {
+            setCurrentQuery(value);
         }
     }, [createTorrentFromMagnet]);
 
