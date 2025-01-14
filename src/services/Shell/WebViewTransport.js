@@ -112,7 +112,7 @@ function WebViewTransport( { core } ) {
                         }
                         case 'AddonInstall': {
                             const addonPath = nativeMsg.path.replace('stremio://', 'https://');
-                            window.location.assign('/#/addons?addon=' + addonPath);
+                            window.location.assign('#/addons?addon=' + addonPath);
                             break;
                         }
                         case 'OpenFile': {

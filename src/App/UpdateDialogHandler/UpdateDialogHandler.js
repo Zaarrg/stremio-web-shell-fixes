@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const classnames = require('classnames');
-const { Image } = require('stremio/common');
+const { Image } = require('stremio/components');
 const styles = require('./styles');
 const {useServices} = require('stremio/services');
 
