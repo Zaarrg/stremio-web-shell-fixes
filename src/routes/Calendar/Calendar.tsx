@@ -11,6 +11,7 @@ import Placeholder from './Placeholder';
 import useCalendar from './useCalendar';
 import useCalendarDate from './useCalendarDate';
 import styles from './Calendar.less';
+import classNames from 'classnames';
 
 type Props = {
     urlParams: UrlParams,
@@ -34,7 +35,7 @@ const Calendar = ({ urlParams }: Props) => {
         <MainNavBars className={styles['calendar']} route={'calendar'}>
             {
                 profile.auth !== null ?
-                    <div className={styles['content']}>
+                    <div className={classNames(styles['content'], 'animation-fade-in')}>
                         <div className={styles['main']}>
                             <Selector
                                 selected={calendar.selected}

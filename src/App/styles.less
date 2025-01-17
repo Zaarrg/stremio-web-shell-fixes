@@ -14,9 +14,19 @@
 }
 
 // iOS pads the bottom inset more than needed, so we deduce the actual inset size when using the webapp
-@calculated-bottom-safe-inset: ~"min(env(safe-area-inset-bottom, 0rem), max(1rem, calc(100lvh - 100svh - env(safe-area-inset-top, 0rem))))";
-@html-width: ~"calc(max(100svw, 100dvw))";
-@html-height: ~"calc(max(100svh, 100dvh))";
+@calculated-bottom-safe-inset: ~"min(env(safe-area-inset-bottom, 0rem), max(1rem, calc(var(--viewport-height-diff) - env(safe-area-inset-top, 0rem))))";
+
+// Viewport sizes
+@viewport-width: ~"100vw";
+@viewport-height: ~"100vh";
+
+// HTML sizes
+@html-width: ~"calc(max(var(--small-viewport-width), var(--dynamic-viewport-width)))";
+@html-height: ~"calc(max(var(--small-viewport-height), var(--dynamic-viewport-height)))";
+@html-standalone-width: ~"calc(max(100%, var(--large-viewport-width)))";
+@html-standalone-height: ~"calc(max(100%, var(--large-viewport-height)))";
+
+// Safe area insets
 @safe-area-inset-top: env(safe-area-inset-top, 0rem);
 @safe-area-inset-right: env(safe-area-inset-right, 0rem);
 @safe-area-inset-bottom: env(safe-area-inset-bottom, 0rem);
@@ -63,6 +73,32 @@
     --safe-area-inset-right: @safe-area-inset-right;
     --safe-area-inset-bottom: @safe-area-inset-bottom;
     --safe-area-inset-left: @safe-area-inset-left;
+    --dynamic-viewport-width: @viewport-width;
+    --dynamic-viewport-height: @viewport-height;
+    --large-viewport-width: @viewport-width;
+    --large-viewport-height: @viewport-height;
+    --small-viewport-width: @viewport-width;
+    --small-viewport-height: @viewport-height;
+    --viewport-height-diff: calc(100vh - 100vh);
+
+    @supports (height: 100dvh) {
+        --dynamic-viewport-width: 100dvw;
+        --dynamic-viewport-height: 100dvh;
+    }
+
+    @supports (height: 100lvh) {
+        --large-viewport-width: 100lvw;
+        --large-viewport-height: 100lvh;
+    }
+
+    @supports (height: 100svh) {
+        --small-viewport-width: 100svw;
+        --small-viewport-height: 100svh;
+    }
+
+    @supports (height: 100lvh) and (height: 100svh) {
+        --viewport-height-diff: calc(100lvh - 100svh);
+    }
 }
 
 * {
@@ -110,14 +146,18 @@ svg {
 html {
     width: @html-width;
     height: @html-height;
-    min-width: 640px;
-    min-height: 480px;
     font-family: 'PlusJakartaSans', 'sans-serif';
     overflow: auto;
     overscroll-behavior: none;
     user-select: none;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+
+
+    @media (display-mode: standalone) {
+        width: @html-standalone-width;
+        height: @html-standalone-height;
+    }
 
     body {
         width: 100%;
@@ -204,9 +244,6 @@ html {
 
 @media only screen and (max-width: @xsmall) {
     html {
-        min-width: inherit;
-        min-height: inherit;
-
         body {
             :global(#app) {
                 .toasts-container {

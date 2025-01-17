@@ -1,6 +1,6 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, MouseEvent } from 'react';
 import Icon from '@stremio/stremio-icons/react';
 import classNames from 'classnames';
 import { Button, HorizontalScroll, Image } from 'stremio/components';
@@ -24,6 +24,10 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
         onClick && onClick(date);
     };
 
+    const onPosterClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+    }, []);
+
     return (
         <Button
             className={classNames(styles['cell'], { [styles['active']]: active, [styles['today']]: today })}
@@ -37,7 +41,7 @@ const Cell = ({ selected, monthInfo, date, items, onClick }: Props) => {
             <HorizontalScroll className={styles['items']}>
                 {
                     items.map(({ id, name, poster, deepLinks }) => (
-                        <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams} tabIndex={-1}>
+                        <Button key={id} className={styles['item']} href={deepLinks.metaDetailsStreams} tabIndex={-1} onClick={onPosterClick}>
                             <Icon className={styles['icon']} name={'play'} />
                             <Image
                                 className={styles['poster']}

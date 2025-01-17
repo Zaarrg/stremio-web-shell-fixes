@@ -55,7 +55,7 @@
         display: flex;
         flex-direction: row;
         gap: 1rem;
-        padding: 0 1rem 1rem 1rem;
+        padding: 0 0.5rem 0.5rem 0.5rem;
 
         .item {
             flex: none;
@@ -134,7 +134,7 @@
     }
 }
 
-@media only screen and (orientation: portrait) {
+@media only screen and (max-height: @minimum) and (orientation: portrait) {
     .cell {
         .heading {
             justify-content: center;
@@ -150,13 +150,13 @@
     }
 }
 
-@media only screen and (max-width: @small) and (orientation: landscape) {
+@media only screen and (max-height: @xxsmall) and (orientation: landscape) {
     .cell {
         flex-direction: row;
         align-items: center;
 
         .items {
-           display: none;
+            display: none;
         }
 
         .more {
@@ -165,14 +165,25 @@
     }
 }
 
-@media only screen and (max-height: @xxsmall) and (orientation: landscape) {
+@media only screen and (max-height: @xsmall) and (max-width: @xsmall) {
     .cell {
-        .items {
-            display: none;
+        gap: 0;
+
+        .heading {
+            height: 2rem;
+
+            .day {
+                font-size: 0.875rem;
+            }
         }
 
-        .more {
-            display: flex;
+        .items {
+            padding: 0.25rem;
+
+            .item {
+                pointer-events: none;
+                border-radius: calc(var(--border-radius) / 2);
+            }
         }
     }
 }
