@@ -137,6 +137,26 @@ function WebViewTransport( { core } ) {
                             });
                             break;
                         }
+                        case 'ServerStarted': {
+                            const reloadServer = () => {
+                                core.transport.dispatch({
+                                    action: 'StreamingServer',
+                                    args: {
+                                        action: 'Reload',
+                                    },
+                                });
+                            };
+                            if (core.active) {
+                                reloadServer();
+                            } else {
+                                const onCoreEvent = () => {
+                                    reloadServer();
+                                    core.transport.off('CoreEvent', onCoreEvent);
+                                };
+                                core.transport.on('CoreEvent', onCoreEvent);
+                            }
+                            break;
+                        }
                         default:
                             events.emit(nativeMsg.type, nativeMsg);
                             break;
