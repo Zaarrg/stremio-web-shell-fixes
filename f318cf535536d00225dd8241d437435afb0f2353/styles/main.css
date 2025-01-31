@@ -7189,7 +7189,7 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
   bottom: -1rem;
   left: -1rem;
   right: -1rem;
-  background: url(../../8ba6428db6ff40d2998db7de6bfab2724fa271ef/images/background_1.svg), url(../../8ba6428db6ff40d2998db7de6bfab2724fa271ef/images/background_2.svg);
+  background: url(../../images/background_1.svg), url(../../images/background_2.svg);
   background-color: var(--primary-background-color);
   background-position: bottom left, top right;
   background-size: 53%, 54%;
@@ -7569,7 +7569,7 @@ html:not(.active-slider-within-NcgYf) .player-container-wIELK.overlayHidden-gyjI
 
 @font-face {
   font-family: 'PlusJakartaSans';
-  src: url(../../8ba6428db6ff40d2998db7de6bfab2724fa271ef/fonts/PlusJakartaSans.ttf) format('truetype');
+  src: url(../../f318cf535536d00225dd8241d437435afb0f2353/fonts/PlusJakartaSans.ttf) format('truetype');
 }
  {
   /* Copyright (C) 2017-2023 Smart code 203358507 */
