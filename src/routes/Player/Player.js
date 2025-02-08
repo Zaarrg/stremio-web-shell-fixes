@@ -48,7 +48,7 @@ const Player = ({ urlParams, queryParams }) => {
     const toast = useToast();
     const profile = useProfile();
     const sync = useSync(profile.auth.key);
-    const minimumBuffer = 1000;
+    const minimumBuffer = 100;
     const [buffer, setBuffer] = React.useState(minimumBuffer);
 
     const [seeking, setSeeking] = React.useState(false);
