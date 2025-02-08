@@ -3,7 +3,7 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - development
+      - Canary
   workflow_dispatch:
 
 jobs:
@@ -34,4 +34,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ghcr.io/zaarrg/stremio-web-shell-fixes:latest
+            ghcr.io/zaarrg/stremio-web-shell-fixes:canary

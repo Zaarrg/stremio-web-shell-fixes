@@ -40,6 +40,7 @@ const ControlBar = ({
     onToggleSideDrawer,
     onToggleOptionsMenu,
     onToggleStatisticsMenu,
+    onToggleSyncMenu,
     ...props
 }) => {
     const { chromecast } = useServices();
@@ -53,6 +54,9 @@ const ControlBar = ({
     }, []);
     const onSpeedButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.speedMenuClosePrevented = true;
+    }, []);
+    const onSyncButtonMouseDown = React.useCallback((event) => {
+        event.nativeEvent.syncMenuClosePrevented = true;
     }, []);
     const onVideosButtonMouseDown = React.useCallback((event) => {
         event.nativeEvent.videosMenuClosePrevented = true;
@@ -148,6 +152,9 @@ const ControlBar = ({
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': statistics === null || statistics.type === 'Err' || stream === null || typeof stream.infoHash !== 'string' || typeof stream.fileIdx !== 'number' })} tabIndex={-1} onMouseDown={onStatisticsButtonMouseDown} onClick={onToggleStatisticsMenu}>
                         <Icon className={styles['icon']} name={'network'} />
                     </Button>
+                    <Button className={classnames(styles['control-bar-button'], { 'disabled': false })} tabIndex={-1} onMouseDown={onSyncButtonMouseDown} onClick={onToggleSyncMenu}>
+                        <Icon className={styles['icon']} name={'glasses'} />
+                    </Button>
                     <Button className={classnames(styles['control-bar-button'], { 'disabled': playbackSpeed === null })} tabIndex={-1} onMouseDown={onSpeedButtonMouseDown} onClick={onToggleSpeedMenu}>
                         <Icon className={styles['icon']} name={'speed'} />
                     </Button>
@@ -205,6 +212,7 @@ ControlBar.propTypes = {
     onToggleSideDrawer: PropTypes.func,
     onToggleOptionsMenu: PropTypes.func,
     onToggleStatisticsMenu: PropTypes.func,
+    onToggleSyncMenu: PropTypes.func,
 };
 
 module.exports = ControlBar;

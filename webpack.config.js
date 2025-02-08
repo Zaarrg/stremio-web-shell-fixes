@@ -210,6 +210,12 @@ module.exports = (env, argv) => ({
     },
     plugins: [
         new webpack.ProgressPlugin(),
+        new webpack.DefinePlugin({
+            'process.env': JSON.stringify(process.env)
+        }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
         new webpack.EnvironmentPlugin({
             SENTRY_DSN: null,
             ...env,

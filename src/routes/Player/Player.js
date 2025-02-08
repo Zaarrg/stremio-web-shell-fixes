@@ -16,6 +16,7 @@ const Error = require('./Error');
 const ControlBar = require('./ControlBar');
 const NextVideoPopup = require('./NextVideoPopup');
 const StatisticsMenu = require('./StatisticsMenu');
+const SyncMenu = require('./SyncMenu');
 const OptionsMenu = require('./OptionsMenu');
 const SubtitlesMenu = require('./SubtitlesMenu');
 const { default: AudioMenu } = require('./AudioMenu');
@@ -23,6 +24,7 @@ const SpeedMenu = require('./SpeedMenu');
 const { default: SideDrawerButton } = require('./SideDrawerButton');
 const { default: SideDrawer } = require('./SideDrawer');
 const usePlayer = require('./usePlayer');
+const useSync = require('./useSync');
 const useSettings = require('./useSettings');
 const useStatistics = require('./useStatistics');
 const useVideo = require('./useVideo');
@@ -45,6 +47,8 @@ const Player = ({ urlParams, queryParams }) => {
     const routeFocused = useRouteFocused();
     const toast = useToast();
     const profile = useProfile();
+    const sync = useSync(profile.auth.key);
+    const [buffer, setBuffer] = React.useState(100);
 
     const [seeking, setSeeking] = React.useState(false);
 
@@ -63,11 +67,12 @@ const Player = ({ urlParams, queryParams }) => {
     const [statisticsMenuOpen, , closeStatisticsMenu, toggleStatisticsMenu] = useBinaryState(false);
     const [nextVideoPopupOpen, openNextVideoPopup, closeNextVideoPopup] = useBinaryState(false);
     const [sideDrawerOpen, , closeSideDrawer, toggleSideDrawer] = useBinaryState(false);
+    const [syncMenuOpen, , closeSyncMenu, toggleSyncMenu] = useBinaryState(false);
     const [externalEmbedded, setExternalEmbedded] = React.useState(false);
 
     const menusOpen = React.useMemo(() => {
-        return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || sideDrawerOpen;
-    }, [optionsMenuOpen, subtitlesMenuOpen, audioMenuOpen, speedMenuOpen, statisticsMenuOpen, sideDrawerOpen]);
+        return optionsMenuOpen || subtitlesMenuOpen || audioMenuOpen || speedMenuOpen || statisticsMenuOpen || sideDrawerOpen || syncMenuOpen;
+    }, [optionsMenuOpen, subtitlesMenuOpen, audioMenuOpen, speedMenuOpen, statisticsMenuOpen, sideDrawerOpen, syncMenuOpen]);
 
     const closeMenus = React.useCallback(() => {
         closeOptionsMenu();
@@ -76,6 +81,7 @@ const Player = ({ urlParams, queryParams }) => {
         closeSpeedMenu();
         closeStatisticsMenu();
         closeSideDrawer();
+        closeSyncMenu();
     }, []);
 
     const overlayHidden = React.useMemo(() => {
@@ -185,15 +191,25 @@ const Player = ({ urlParams, queryParams }) => {
         return null;
     }, []);
 
+    const handleIncreaseBuffer = React.useCallback(() => {
+        setBuffer((buffer) => buffer + 50);
+    }, []);
+
+    const handleDecreaseBuffer = React.useCallback(() => {
+        setBuffer((buffer) => Math.max(buffer - 50, 100));
+    }, []);
+
     const onPlayRequested = React.useCallback(() => {
         video.setProp('paused', false);
         setSeeking(false);
+        sync.sendUnpause();
     }, []);
 
     const onPlayRequestedDebounced = React.useCallback(debounce(onPlayRequested, 200), []);
 
     const onPauseRequested = React.useCallback(() => {
         video.setProp('paused', true);
+        sync.sendPause();
     }, []);
 
     const onPauseRequestedDebounced = React.useCallback(debounce(onPauseRequested, 200), []);
@@ -299,7 +315,9 @@ const Player = ({ urlParams, queryParams }) => {
         if (!event.nativeEvent.statisticsMenuClosePrevented) {
             closeStatisticsMenu();
         }
-
+        if (!event.nativeEvent.syncMenuClosePrevented) {
+            closeSyncMenu();
+        }
         closeSideDrawer();
     }, []);
 
@@ -478,6 +496,84 @@ const Player = ({ urlParams, queryParams }) => {
             autoSelectSubtitlesDebounced.cancel();
         };
     }, [video.state.subtitlesTracks, video.state.extraSubtitlesTracks, autoSelectSubtitlesDebounced]);
+
+    React.useEffect(() => {
+        if (!video.state.time) return;
+        sync.sendSeek(video.state.time);
+    }, [video.state.time]);
+
+    React.useEffect(() => {
+        if (!sync.latestMessage) return;
+        switch (sync.latestMessage.action) {
+            case 'room_created':
+                toast.show({
+                    type: 'success',
+                    title: 'Syncing Room',
+                    message: 'Room created successfully',
+                    timeout: 3000
+                });
+                break;
+            case 'room_joined':
+                toast.show({
+                    type: 'success',
+                    title: 'Syncing Room',
+                    message: 'Room joined successfully',
+                    timeout: 3000
+                });
+                break;
+            case 'member_joined':
+                toast.show({
+                    type: 'success',
+                    title: 'Syncing Joined',
+                    message: sync.latestMessage.payload,
+                    timeout: 3000
+                });
+                if (sync.isHost) {
+                    sync.sendSeek(video.state.time);
+                    if (video.state.paused) {
+                        sync.sendPause();
+                    } else {
+                        sync.sendUnpause();
+                    }
+                }
+                break;
+            case 'pause':
+                video.setProp('paused', true);
+                break;
+            case 'pause_no':
+                video.setProp('paused', false);
+                setSeeking(false);
+                break;
+            case 'seek': {
+                if (video.state.buffering) return;
+                // Assume payload is in the format "targetTime|sentAt"
+                const payloadStr = sync.latestMessage.payload;
+                const parts = payloadStr.split('|');
+                if (parts.length < 2) {
+                    break;
+                }
+                const incomingTime = Number(parts[0]);
+                const sentAt = Number(parts[1]);
+                const networkDelay = Date.now() - sentAt;
+                const threshold = Math.max(networkDelay + buffer, 100);
+                const currentTime = video.state.time;
+                const diff = Math.abs(incomingTime - currentTime);
+
+                if (diff > threshold) {
+                    onSeekRequested(incomingTime);
+                }
+                break;
+            }
+            case 'error':
+                toast.show({
+                    type: 'error',
+                    title: 'Syncing Error',
+                    message: sync.latestMessage.payload,
+                    timeout: 3000
+                });
+                break;
+        }
+    }, [sync.latestMessage]);
 
     React.useEffect(() => {
         if (!defaultAudioTrackSelected.current) {
@@ -770,10 +866,18 @@ const Player = ({ urlParams, queryParams }) => {
         };
         const onWheel = ({ deltaY }) => {
             if (deltaY > 0) {
+                if (syncMenuOpen) {
+                    handleDecreaseBuffer();
+                    return;
+                }
                 if (!menusOpen && video.state.volume !== null) {
                     onVolumeChangeRequested(video.state.volume - 5);
                 }
             } else {
+                if (syncMenuOpen) {
+                    handleIncreaseBuffer();
+                    return;
+                }
                 if (!menusOpen && video.state.volume !== null) {
                     onVolumeChangeRequested(video.state.volume + 5);
                 }
@@ -789,7 +893,7 @@ const Player = ({ urlParams, queryParams }) => {
             window.removeEventListener('keyup', onKeyUp);
             window.removeEventListener('wheel', onWheel);
         };
-    }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, settings.seekShortTimeDuration, routeFocused, menusOpen, nextVideoPopupOpen, video.state.paused, video.state.time, video.state.volume, video.state.audioTracks, video.state.subtitlesTracks, video.state.extraSubtitlesTracks, video.state.playbackSpeed, toggleSubtitlesMenu, toggleStatisticsMenu, toggleSideDrawer]);
+    }, [player.metaItem, player.selected, streamingServer.statistics, settings.seekTimeDuration, settings.seekShortTimeDuration, routeFocused, syncMenuOpen, menusOpen, nextVideoPopupOpen, video.state.paused, video.state.time, video.state.volume, video.state.audioTracks, video.state.subtitlesTracks, video.state.extraSubtitlesTracks, video.state.playbackSpeed, toggleSubtitlesMenu, toggleStatisticsMenu, toggleSideDrawer]);
 
     React.useEffect(() => {
         video.events.on('error', onError);
@@ -915,6 +1019,7 @@ const Player = ({ urlParams, queryParams }) => {
                 onToggleAudioMenu={toggleAudioMenu}
                 onToggleSpeedMenu={toggleSpeedMenu}
                 onToggleStatisticsMenu={toggleStatisticsMenu}
+                onToggleSyncMenu={toggleSyncMenu}
                 onToggleSideDrawer={toggleSideDrawer}
                 onMouseMove={onBarMouseMove}
                 onMouseOver={onBarMouseMove}
@@ -936,6 +1041,23 @@ const Player = ({ urlParams, queryParams }) => {
                     <StatisticsMenu
                         className={classnames(styles['layer'], styles['menu-layer'])}
                         {...statistics}
+                    />
+                    :
+                    null
+            }
+            {
+                syncMenuOpen ?
+                    <SyncMenu
+                        className={classnames(styles['layer'], styles['menu-layer'])}
+                        status={sync.status}
+                        isHost={sync.isHost}
+                        roomId={sync.roomId}
+                        limitOther={sync.limitOther}
+                        connectAsHost={sync.connectAsHost}
+                        connectAsMember={sync.connectAsMember}
+                        disconnect={sync.disconnect}
+                        sendMessage={sync.sendMessage}
+                        buffer={buffer}
                     />
                     :
                     null
