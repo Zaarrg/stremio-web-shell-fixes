@@ -1,6 +1,6 @@
 const React = require('react');
 
-const WS_URL = 'ws://stremio-sync.zarg.me/ws';
+const WS_URL = 'wss://stremio-sync.zarg.me/ws';
 
 const useSync = (token) => {
     const [status, setStatus] = React.useState('disconnected');
