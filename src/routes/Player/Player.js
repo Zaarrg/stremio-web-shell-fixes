@@ -504,6 +504,15 @@ const Player = ({ urlParams, queryParams }) => {
     }, [video.state.time]);
 
     React.useEffect(() => {
+        if (sync.isPause) {
+            video.setProp('paused', true);
+        } else {
+            video.setProp('paused', false);
+            setSeeking(false);
+        }
+    }, [sync.isPause]);
+
+    React.useEffect(() => {
         if (!sync.latestMessage) return;
         switch (sync.latestMessage.action) {
             case 'room_created':
@@ -539,14 +548,10 @@ const Player = ({ urlParams, queryParams }) => {
                 }
                 break;
             case 'pause':
-                video.setProp('paused', true);
-                break;
             case 'pause_no':
-                video.setProp('paused', false);
-                setSeeking(false);
                 break;
             case 'seek': {
-                if (video.state.buffering) return;
+                if (video.state.buffering || !video.state.time) return;
                 // Assume payload is in the format "targetTime|sentAt"
                 const payloadStr = sync.latestMessage.payload;
                 const parts = payloadStr.split('|');

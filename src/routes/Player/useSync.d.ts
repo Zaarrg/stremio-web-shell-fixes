@@ -1,5 +1,6 @@
 declare const useSync: (token: string) => {
     isHost: boolean,
+    isPause: boolean,
     limitOther: boolean,
     status: 'disconnected' | 'connecting' | 'connected' | 'error',
     roomId: string | null,

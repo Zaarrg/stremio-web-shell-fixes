@@ -5,10 +5,10 @@ const WS_URL = 'wss://stremio-sync.zarg.me/ws';
 const useSync = (token) => {
     const [status, setStatus] = React.useState('disconnected');
     const [roomId, setRoomId] = React.useState(null);
-    const [messages, setMessages] = React.useState([]);
     const [latestMessage, setLatestMessage] = React.useState(null);
     const [limitOther, setLimitOther] = React.useState(false);
     const [isHost, setHost] = React.useState(false);
+    const [isPause, setPause] = React.useState(false);
     const wsRef = React.useRef(null);
 
     // Internal function to connect given an action ("create" or "join") and (optionally) a room ID.
@@ -45,7 +45,6 @@ const useSync = (token) => {
             try {
                 const data = JSON.parse(event.data);
                 setLatestMessage(data);
-                setMessages((prev) => [...prev, data]);
                 // When the server responds with a room ID (for create or join), store it.
                 switch (data.action) {
                     case 'room_joined':
@@ -61,6 +60,12 @@ const useSync = (token) => {
                         setLimitOther(newState);
                         break;
                     }
+                    case 'pause':
+                        setPause(true);
+                        break;
+                    case 'pause_no':
+                        setPause(false);
+                        break;
                 }
             } catch (err) {
                 console.error('Failed to parse incoming message:', err);
@@ -122,11 +127,11 @@ const useSync = (token) => {
 
     return {
         isHost,
+        isPause,
         limitOther,
         status,
         roomId,
         latestMessage,
-        messages,
         connectAsHost,
         connectAsMember,
         sendMessage,
