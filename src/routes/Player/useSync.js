@@ -24,10 +24,13 @@ const useSync = (token) => {
         }
 
         setStatus('connecting');
+        console.log('Connecting websocket')
+        console.log(WS_URL)
         const ws = new WebSocket(WS_URL);
         wsRef.current = ws;
 
         ws.onopen = () => {
+            console.log('Connected websocket')
             setStatus('connected');
 
             // Send the initial message.
