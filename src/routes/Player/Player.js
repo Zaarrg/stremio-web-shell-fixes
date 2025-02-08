@@ -48,7 +48,8 @@ const Player = ({ urlParams, queryParams }) => {
     const toast = useToast();
     const profile = useProfile();
     const sync = useSync(profile.auth.key);
-    const [buffer, setBuffer] = React.useState(100);
+    const minimumBuffer = 1000;
+    const [buffer, setBuffer] = React.useState(minimumBuffer);
 
     const [seeking, setSeeking] = React.useState(false);
 
@@ -196,7 +197,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, []);
 
     const handleDecreaseBuffer = React.useCallback(() => {
-        setBuffer((buffer) => Math.max(buffer - 50, 100));
+        setBuffer((buffer) => Math.max(buffer - 50, minimumBuffer));
     }, []);
 
     const onPlayRequested = React.useCallback(() => {
@@ -555,7 +556,7 @@ const Player = ({ urlParams, queryParams }) => {
                 const incomingTime = Number(parts[0]);
                 const sentAt = Number(parts[1]);
                 const networkDelay = Date.now() - sentAt;
-                const threshold = Math.max(networkDelay + buffer, 100);
+                const threshold = Math.max(networkDelay + buffer, minimumBuffer);
                 const currentTime = video.state.time;
                 const diff = Math.abs(incomingTime - currentTime);
 
