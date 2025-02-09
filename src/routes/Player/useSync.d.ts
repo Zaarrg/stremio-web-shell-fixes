@@ -3,6 +3,7 @@ declare const useSync: (token: string) => {
     isPause: boolean,
     limitOther: boolean,
     status: 'disconnected' | 'connecting' | 'connected' | 'error',
+    networkDelay: number,
     roomId: string | null,
     latestMessage: any,
     messages: any[],

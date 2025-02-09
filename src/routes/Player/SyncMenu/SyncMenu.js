@@ -4,7 +4,7 @@ const React = require('react');
 const classNames = require('classnames');
 const PropTypes = require('prop-types');
 const styles = require('./styles.less');
-const {useToast} = require("stremio/common");
+const {useToast} = require('stremio/common');
 
 const SyncMenu = ({
     className,
@@ -107,7 +107,7 @@ const SyncMenu = ({
                             <button
                                 className={limitOther ? styles['active'] : ''}
                                 onClick={() => {
-                                    sendMessage({action: 'limit', payload: !limitOther ? 'on' : 'off'});
+                                    sendMessage(`limit,${!limitOther ? 'on' : 'off'}`);
                                 }}
                             >
                                 Host-Only Mode

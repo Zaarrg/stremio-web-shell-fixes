@@ -49,7 +49,8 @@ const Player = ({ urlParams, queryParams }) => {
     const profile = useProfile();
     const sync = useSync(profile.auth.key);
     const minimumBuffer = 100;
-    const [buffer, setBuffer] = React.useState(minimumBuffer);
+    const defaultBuffer = 100;
+    const [buffer, setBuffer] = React.useState(defaultBuffer);
 
     const [seeking, setSeeking] = React.useState(false);
 
@@ -203,14 +204,12 @@ const Player = ({ urlParams, queryParams }) => {
     const onPlayRequested = React.useCallback(() => {
         video.setProp('paused', false);
         setSeeking(false);
-        sync.sendUnpause();
     }, []);
 
     const onPlayRequestedDebounced = React.useCallback(debounce(onPlayRequested, 200), []);
 
     const onPauseRequested = React.useCallback(() => {
         video.setProp('paused', true);
-        sync.sendPause();
     }, []);
 
     const onPauseRequestedDebounced = React.useCallback(debounce(onPauseRequested, 200), []);
@@ -499,22 +498,55 @@ const Player = ({ urlParams, queryParams }) => {
     }, [video.state.subtitlesTracks, video.state.extraSubtitlesTracks, autoSelectSubtitlesDebounced]);
 
     React.useEffect(() => {
-        if (!video.state.time) return;
+        if (video.state.paused === true) {
+            sync.sendPause();
+        } else if (video.state.paused === false) {
+            sync.sendUnpause();
+        }
+    }, [video.state.paused]);
+
+    React.useEffect(() => {
+        if (video.state.time === null || video.state.time === undefined) return;
         sync.sendSeek(video.state.time);
     }, [video.state.time]);
 
     React.useEffect(() => {
-        if (sync.isPause) {
-            video.setProp('paused', true);
-        } else {
-            video.setProp('paused', false);
-            setSeeking(false);
-        }
-    }, [sync.isPause]);
+        if (!buffer || sync.limitOther) return;
+        sync.sendMessage(`buffer,${buffer}`);
+    }, [buffer, sync.limitOther]);
 
     React.useEffect(() => {
         if (!sync.latestMessage) return;
         switch (sync.latestMessage.action) {
+            case 'seek': {
+                if (video.state.buffering || video.state.time === null || video.state.time === undefined || (video.state.paused && sync.limitOther)) return;
+
+                const args = sync.latestMessage.payload.split(':'); // time:delay
+                const incomingTime = Number(args[0]);
+                const incomingDelay = Number(args[1]);
+                const networkDelay = sync.networkDelay;
+
+                const threshold = Math.max(networkDelay + incomingDelay + buffer, minimumBuffer);
+                const currentTime = video.state.time;
+                const diff = Math.abs(incomingTime - currentTime);
+
+                if (diff > threshold) {
+                    onSeekRequested(incomingTime);
+                }
+                break;
+            }
+            case 'pause':
+                onPauseRequested();
+                break;
+            case 'pause_no':
+                onPlayRequested();
+                break;
+            case 'buffer': {
+                if (sync.limitOther) return;
+                const incomingBuffer = Number(sync.latestMessage.payload);
+                setBuffer(Math.max(incomingBuffer, minimumBuffer));
+                break;
+            }
             case 'room_created':
                 toast.show({
                     type: 'success',
@@ -540,36 +572,13 @@ const Player = ({ urlParams, queryParams }) => {
                 });
                 if (sync.isHost) {
                     sync.sendSeek(video.state.time);
-                    if (video.state.paused) {
+                    if (video.state.paused === true) {
                         sync.sendPause();
-                    } else {
+                    } else if (video.state.paused === false) {
                         sync.sendUnpause();
                     }
                 }
                 break;
-            case 'pause':
-            case 'pause_no':
-                break;
-            case 'seek': {
-                if (video.state.buffering || !video.state.time) return;
-                // Assume payload is in the format "targetTime|sentAt"
-                const payloadStr = sync.latestMessage.payload;
-                const parts = payloadStr.split('|');
-                if (parts.length < 2) {
-                    break;
-                }
-                const incomingTime = Number(parts[0]);
-                const sentAt = Number(parts[1]);
-                const networkDelay = Date.now() - sentAt;
-                const threshold = Math.max(networkDelay + buffer, minimumBuffer);
-                const currentTime = video.state.time;
-                const diff = Math.abs(incomingTime - currentTime);
-
-                if (diff > threshold) {
-                    onSeekRequested(incomingTime);
-                }
-                break;
-            }
             case 'error':
                 toast.show({
                     type: 'error',

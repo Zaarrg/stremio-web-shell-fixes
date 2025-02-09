@@ -1,6 +1,6 @@
 const React = require('react');
 
-const WS_URL = 'wss://stremio-sync.zarg.me/ws';
+const WS_URL = process.env.SYNC_WS;
 
 const useSync = (token) => {
     const [status, setStatus] = React.useState('disconnected');
@@ -8,8 +8,9 @@ const useSync = (token) => {
     const [latestMessage, setLatestMessage] = React.useState(null);
     const [limitOther, setLimitOther] = React.useState(false);
     const [isHost, setHost] = React.useState(false);
-    const [isPause, setPause] = React.useState(false);
+    const [networkDelay, setNetworkDelay] = React.useState(100);
     const wsRef = React.useRef(null);
+    const pingIntervalRef = React.useRef(null);
 
     // Internal function to connect given an action ("create" or "join") and (optionally) a room ID.
     const connect = React.useCallback((action, joinRoomId = null) => {
@@ -31,40 +32,60 @@ const useSync = (token) => {
 
         ws.onopen = () => {
             console.log('Connected websocket')
-            setStatus('connected');
+            // Start ping-pong
+            pingIntervalRef.current = setInterval(() => {
+                if (ws.readyState === WebSocket.OPEN) {
+                    // Send a ping with the current timestamp.
+                    ws.send(`ping,${Date.now()}`);
+                }
+            }, 1000);
 
             // Send the initial message.
             if (action === 'create') {
-                ws.send(JSON.stringify({ action: 'create', token }));
+                ws.send(`create,${token}`);
             } else if (action === 'join') {
-                ws.send(JSON.stringify({ action: 'join', token, room_id: joinRoomId }));
+                ws.send(`join,${token},${joinRoomId.replace(/\s/g, '')}`);
             }
         };
 
         ws.onmessage = (event) => {
             try {
-                const data = JSON.parse(event.data);
-                setLatestMessage(data);
+                const msgStr = event.data;
+                const parts = msgStr.split(',');
+                if (parts.length < 2) {
+                    console.error('Invalid message received:', msgStr);
+                    return;
+                }
+                const message = {
+                    action: parts[0],
+                    payload: parts[1],
+                };
+                setLatestMessage(message);
                 // When the server responds with a room ID (for create or join), store it.
-                switch (data.action) {
+                switch (message.action) {
                     case 'room_joined':
                     case 'room_created':
-                        setRoomId(data.room_id);
-                        setHost(data.action === 'room_created');
+                        setRoomId(message.payload);
+                        setHost(message.action === 'room_created');
+                        setStatus('connected');
                         break;
                     case 'new_host':
                         setHost(true);
                         break;
                     case 'limit_changed': {
-                        const newState = data.payload === 'on';
+                        const newState = message.payload === 'on';
                         setLimitOther(newState);
                         break;
                     }
-                    case 'pause':
-                        setPause(true);
+                    case 'pong': {
+                        const sentTimestamp = parseInt(message.payload, 10);
+                        const rtt = Date.now() - sentTimestamp;
+                        const latency = rtt / 2;
+                        setNetworkDelay(latency);
                         break;
-                    case 'pause_no':
-                        setPause(false);
+                    }
+                    case 'error':
+                        setStatus('error');
                         break;
                 }
             } catch (err) {
@@ -79,6 +100,10 @@ const useSync = (token) => {
 
         ws.onclose = () => {
             setStatus('disconnected');
+            if (pingIntervalRef.current) {
+                clearInterval(pingIntervalRef.current);
+                pingIntervalRef.current = null;
+            }
         };
     }, [token]);
 
@@ -93,9 +118,9 @@ const useSync = (token) => {
 
     // Helper to send an arbitrary message (always includes the token).
     const sendMessage = React.useCallback(
-        (msgObj) => {
+        (msg) => {
             if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-                wsRef.current.send(JSON.stringify(msgObj));
+                wsRef.current.send(msg);
             }
         },
         [token]
@@ -104,18 +129,17 @@ const useSync = (token) => {
     // Specific helper functions to send commands:
     const sendSeek = React.useCallback(
         (seekTime) => {
-            const payload = `${seekTime}|${Date.now()}`;
-            sendMessage({ action: 'seek', payload });
+            sendMessage(`seek,${seekTime}:${networkDelay}`);
         },
-        [sendMessage]
+        [sendMessage, networkDelay]
     );
 
     const sendPause = React.useCallback(() => {
-        sendMessage({ action: 'pause', payload: 'pause' });
+        sendMessage('pause,pause');
     }, [sendMessage]);
 
     const sendUnpause = React.useCallback(() => {
-        sendMessage({ action: 'pause_no', payload: 'unpause' });
+        sendMessage('pause_no,unpause');
     }, [sendMessage]);
 
     const disconnect = React.useCallback(() => {
@@ -127,9 +151,9 @@ const useSync = (token) => {
 
     return {
         isHost,
-        isPause,
         limitOther,
         status,
+        networkDelay,
         roomId,
         latestMessage,
         connectAsHost,
