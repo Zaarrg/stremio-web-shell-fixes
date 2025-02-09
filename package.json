@@ -2,7 +2,7 @@
     "name": "stremio",
     "displayName": "Stremio",
     "version": "5.0.0-canary.18",
-    "subVersion": "20",
+    "subVersion": "21",
     "author": "Smart Code OOD",
     "private": true,
     "license": "gpl-2.0",
