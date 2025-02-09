@@ -506,7 +506,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, [video.state.paused]);
 
     React.useEffect(() => {
-        if (video.state.time === null || video.state.time === undefined) return;
+        if (video.state.time === null || video.state.time === undefined || sync.status !== 'connected') return;
         sync.sendSeek(video.state.time);
     }, [video.state.time]);
 
@@ -518,6 +518,17 @@ const Player = ({ urlParams, queryParams }) => {
     React.useEffect(() => {
         if (!sync.latestMessage) return;
         switch (sync.latestMessage.action) {
+            case 'resync': {
+                const args = sync.latestMessage.payload.split(':'); //seek:buffer:paused(yes,no)
+                if (args[2] === 'yes') {
+                    onPauseRequested();
+                } else if (args[2] === 'no') {
+                    onPlayRequested();
+                }
+                setBuffer(Number(args[1]));
+                onSeekRequested(Number(args[0]));
+                break;
+            }
             case 'seek': {
                 if (video.state.buffering || video.state.time === null || video.state.time === undefined || (video.state.paused && sync.limitOther)) return;
 
@@ -571,12 +582,7 @@ const Player = ({ urlParams, queryParams }) => {
                     timeout: 3000
                 });
                 if (sync.isHost) {
-                    sync.sendSeek(video.state.time);
-                    if (video.state.paused === true) {
-                        sync.sendPause();
-                    } else if (video.state.paused === false) {
-                        sync.sendUnpause();
-                    }
+                    sync.sendMessage(`resync,${video.state.time}:${buffer}:${video.state.paused ? 'yes' : 'no'}`);
                 }
                 break;
             case 'error':
