@@ -23,6 +23,8 @@ const useSync = (token) => {
         if (wsRef.current) {
             wsRef.current.close();
         }
+        //Todo some message because its not a queue sytem are ignored - e.g inital join seek and pause
+        //Todo writetext cliboard not work on laptop
 
         setStatus('connecting');
         console.log('Connecting websocket')
@@ -60,7 +62,6 @@ const useSync = (token) => {
                     action: parts[0],
                     payload: parts[1],
                 };
-                setLatestMessage(message);
                 // When the server responds with a room ID (for create or join), store it.
                 switch (message.action) {
                     case 'room_joined':
@@ -88,6 +89,7 @@ const useSync = (token) => {
                         setStatus('error');
                         break;
                 }
+                setLatestMessage(message);
             } catch (err) {
                 console.error('Failed to parse incoming message:', err);
             }
