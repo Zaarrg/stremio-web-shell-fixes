@@ -211,7 +211,7 @@ module.exports = (env, argv) => ({
     plugins: [
         new webpack.ProgressPlugin(),
         new webpack.DefinePlugin({
-            'process.env': JSON.stringify(process.env)
+            'process.env.SYNC_WS': JSON.stringify(process.env.SYNC_WS)
         }),
         new webpack.ProvidePlugin({
             process: 'process/browser',
