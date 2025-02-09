@@ -23,8 +23,6 @@ const useSync = (token) => {
         if (wsRef.current) {
             wsRef.current.close();
         }
-        //Todo some message because its not a queue sytem are ignored - e.g inital join seek and pause
-        //Todo writetext cliboard not work on laptop
 
         setStatus('connecting');
         console.log('Connecting websocket')
