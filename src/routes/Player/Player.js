@@ -930,6 +930,7 @@ const Player = ({ urlParams, queryParams }) => {
             shell.transport.send('mpv-set-prop', ['hwdec-codecs', 'h264,vc1,hevc,vp8,vp9,av1,prores']);
         }
         return () => {
+            sync.disconnect();
             video.events.off('error', onError);
             video.events.off('ended', onEnded);
             video.events.off('implementationChanged', onImplementationChanged);

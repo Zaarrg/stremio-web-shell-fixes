@@ -147,6 +147,7 @@ const useSync = (token) => {
             wsRef.current.close();
             wsRef.current = null;
         }
+        setStatus('disconnected');
     }, []);
 
     return {
