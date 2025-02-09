@@ -69,6 +69,19 @@
     transform: translateX(100%);
 }
 
+.slide-up-enter {
+    transform: translateY(100%);
+}
+
+.slide-up-active {
+    transform: translateY(0%);
+    transition: transform 0.3s cubic-bezier(0.32, 0, 0.67, 0);
+}
+
+.slide-up-exit {
+    transform: translateY(100%);
+}
+
 @keyframes fade-in-no-motion {
     0% {
         opacity: 0;

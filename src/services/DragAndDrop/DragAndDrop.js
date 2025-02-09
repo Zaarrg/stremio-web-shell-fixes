@@ -36,6 +36,12 @@ function DragAndDrop({ core, shell }) {
                     }
                     break;
                 }
+                case 'application/x-subrip':
+                    break;
+                case 'text/vtt':
+                    break;
+                case '':
+                    break;
                 default: {
                     if (shell.active && window.chrome && window.chrome.webview) {
                         events.emit('success', {

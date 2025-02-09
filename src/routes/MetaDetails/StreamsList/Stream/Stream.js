@@ -181,12 +181,17 @@ const Stream = ({ className, videoId, videoReleased, addonName, name, descriptio
     const renderMenu = React.useMemo(() => function renderMenu() {
         return (
             <div className={styles['context-menu-content']} onPointerDown={popupMenuOnPointerDown} onContextMenu={popupMenuOnContextMenu} onClick={popupMenuOnClick} onKeyDown={popupMenuOnKeyDown}>
+                <div className={styles['context-menu-title']}>
+                    {description}
+                </div>
                 <Button className={styles['context-menu-option-container']} title={t('CTX_PLAY')}>
+                    <Icon className={styles['menu-icon']} name={'play'} />
                     <div className={styles['context-menu-option-label']}>{t('CTX_PLAY')}</div>
                 </Button>
                 {
                     streamLink &&
                         <Button className={styles['context-menu-option-container']} title={t('CTX_COPY_STREAM_LINK')} onClick={copyStreamLink}>
+                            <Icon className={styles['menu-icon']} name={'link'} />
                             <div className={styles['context-menu-option-label']}>{t('CTX_COPY_STREAM_LINK')}</div>
                         </Button>
                 }

@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { WHITELISTED_HOSTS } from 'stremio/common/CONSTANTS';
-import useShell from './useShell';
+import useShell from 'stremio/common/useShell';
 import { name, isMobile } from './device';
 
 interface PlatformContext {

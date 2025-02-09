@@ -10,11 +10,13 @@ const styles = require('./styles');
 const { t } = require('i18next');
 
 const ORIGIN_PRIORITIES = {
+    'LOCAL': 3,
     'EMBEDDED': 2,
-    'EXCLUSIVE': 1
+    'EXCLUSIVE': 1,
 };
 const LANGUAGE_PRIORITIES = {
-    'eng': 1
+    'local': 2,
+    'eng': 1,
 };
 
 const SubtitlesMenu = React.memo((props) => {
@@ -176,7 +178,11 @@ const SubtitlesMenu = React.memo((props) => {
                     </Button>
                     {subtitlesLanguages.map((lang, index) => (
                         <Button key={index} title={languages.label(lang)} className={classnames(styles['language-option'], { 'selected': selectedSubtitlesLanguage === lang })} data-lang={lang} onClick={subtitlesLanguageOnClick}>
-                            <div className={styles['language-label']}>{languages.label(lang)}</div>
+                            <div className={styles['language-label']}>
+                                {
+                                    lang === 'local' ? t('LOCAL') : languages.label(lang)
+                                }
+                            </div>
                             {
                                 selectedSubtitlesLanguage === lang ?
                                     <div className={styles['icon']} />

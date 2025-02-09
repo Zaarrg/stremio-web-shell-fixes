@@ -142,6 +142,7 @@ const ControlBar = ({
                 <VolumeSlider
                     className={styles['volume-slider']}
                     volume={volume}
+                    muted={muted}
                     onVolumeChangeRequested={onVolumeChangeRequested}
                 />
                 <div className={styles['spacing']} />
