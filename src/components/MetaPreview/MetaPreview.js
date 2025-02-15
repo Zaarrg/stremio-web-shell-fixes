@@ -221,6 +221,19 @@ const MetaPreview = ({ className, compact, name, logo, background, runtime, rele
                         null
                 }
                 {
+                    typeof name === 'string' ?
+                        <ActionButton
+                            className={styles['action-button']}
+                            icon={'search'}
+                            label={'Search'}
+                            tooltip={true}
+                            tabIndex={compact ? -1 : 0}
+                            href={'#/search?query=' + name}
+                        />
+                        :
+                        null
+                }
+                {
                     typeof showHref === 'string' && compact ?
                         <ActionButton
                             className={classnames(styles['action-button'], styles['show-button'])}
