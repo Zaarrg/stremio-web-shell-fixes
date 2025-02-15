@@ -530,7 +530,7 @@ const Player = ({ urlParams, queryParams }) => {
                 break;
             }
             case 'seek': {
-                if (video.state.buffering || video.state.time === null || video.state.time === undefined || (video.state.paused && sync.limitOther)) return;
+                if (video.state.buffering || seeking || video.state.playbackSpeed > 50 || video.state.time === null || video.state.time === undefined || (video.state.paused && sync.limitOther)) return;
 
                 const args = sync.latestMessage.payload.split(':'); // time:delay
                 const incomingTime = Number(args[0]);
@@ -848,6 +848,7 @@ const Player = ({ urlParams, queryParams }) => {
                         'Backquote': '`',
                         'CapsLock': ''
                     };
+                    if (codeOrKey === 'Tab') setSeeking(true);
 
                     if (['Shift', 'Control', 'Alt', 'Meta'].includes(event.key)) {
                         break;
@@ -881,7 +882,7 @@ const Player = ({ urlParams, queryParams }) => {
             }
         };
         const onKeyUp = (event) => {
-            if (event.code === 'ArrowRight' || event.code === 'ArrowLeft' || event.code === 'Numpad6' || event.code === 'Numpad4') {
+            if (event.code === 'ArrowRight' || event.code === 'ArrowLeft' || event.code === 'Numpad6' || event.code === 'Numpad4' || event.code === 'Tab' || event.code === 'MediaTrackNext' || event.code === 'MediaTrackPrevious') {
                 setSeeking(false);
             }
         };
