@@ -4,6 +4,7 @@ const React = require('react');
 const { useTranslation } = require('react-i18next');
 const { useServices } = require('stremio/services');
 const { CONSTANTS, usePlatform, interfaceLanguages, languageNames } = require('stremio/common');
+const isoConv = require('iso-language-converter');
 
 const useProfileSettingsInputs = (profile) => {
     const { t } = useTranslation();
@@ -33,9 +34,9 @@ const useProfileSettingsInputs = (profile) => {
     }), [profile.settings]);
     const subtitlesLanguageSelect = React.useMemo(() => ({
         options: Object.keys(languageNames).map((code) => ({
-            value: code,
-            label: languageNames[code]
-        })).sort((a, b) => a.value.localeCompare(b.value)),
+            value: isoConv(code, { to: 2 }) || code,
+            label: isoConv(code) || languageNames[code]
+        })).sort((a, b) => a.label.localeCompare(b.label)),
         selected: [profile.settings.subtitlesLanguage],
         onSelect: (event) => {
             core.transport.dispatch({
@@ -119,9 +120,9 @@ const useProfileSettingsInputs = (profile) => {
     }), [profile.settings]);
     const audioLanguageSelect = React.useMemo(() => ({
         options: Object.keys(languageNames).map((code) => ({
-            value: code,
-            label: languageNames[code]
-        })).sort((a, b) => a.value.localeCompare(b.value)),
+            value: isoConv(code, { to: 2 }) || code,
+            label: isoConv(code) || languageNames[code]
+        })).sort((a, b) => a.label.localeCompare(b.label)),
         selected: [profile.settings.audioLanguage],
         onSelect: (event) => {
             core.transport.dispatch({

@@ -7,8 +7,10 @@ const debounce = require('lodash.debounce');
 const { useRouteFocused } = require('stremio-router');
 const { Slider } = require('stremio/components');
 const styles = require('./styles');
+const {useStorage} = require('stremio/common');
 
-const VolumeSlider = ({ className, volume, onVolumeChangeRequested }) => {
+const VolumeSlider = ({ className, volume, onVolumeChangeRequested, muted }) => {
+    const [storage,] = useStorage();
     const disabled = false;
     if (volume === null || isNaN(volume)) {
         if (typeof onVolumeChangeRequested === 'function') {
@@ -17,6 +19,7 @@ const VolumeSlider = ({ className, volume, onVolumeChangeRequested }) => {
     }
     const routeFocused = useRouteFocused();
     const [slidingVolume, setSlidingVolume] = React.useState(null);
+    const maxVolume = Number(storage.maxVolume) || 100;
     const resetVolumeDebounced = React.useCallback(debounce(() => {
         setSlidingVolume(null);
     }, 100), []);
@@ -50,15 +53,18 @@ const VolumeSlider = ({ className, volume, onVolumeChangeRequested }) => {
             className={classnames(className, styles['volume-slider'], { 'active': slidingVolume !== null })}
             value={
                 !disabled ?
-                    slidingVolume !== null ? slidingVolume : volume
+                    !muted ?
+                        slidingVolume !== null ? slidingVolume : volume
+                        : 0
                     :
                     100
             }
             minimumValue={0}
-            maximumValue={100}
+            maximumValue={maxVolume}
             disabled={disabled}
             onSlide={onSlide}
             onComplete={onComplete}
+            audioBoost={false}
         />
     );
 };
@@ -66,7 +72,8 @@ const VolumeSlider = ({ className, volume, onVolumeChangeRequested }) => {
 VolumeSlider.propTypes = {
     className: PropTypes.string,
     volume: PropTypes.number,
-    onVolumeChangeRequested: PropTypes.func
+    onVolumeChangeRequested: PropTypes.func,
+    muted: PropTypes.bool,
 };
 
 module.exports = VolumeSlider;

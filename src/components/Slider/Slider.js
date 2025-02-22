@@ -9,7 +9,7 @@ const useLiveRef = require('stremio/common/useLiveRef');
 const styles = require('./styles');
 const {useServices} = require('stremio/services');
 
-const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabled, onSlide, onComplete }) => {
+const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabled, onSlide, onComplete, audioBoost }) => {
     const minimumValueRef = useLiveRef(minimumValue !== null && !isNaN(minimumValue) ? minimumValue : 0);
     const maximumValueRef = useLiveRef(maximumValue !== null && !isNaN(maximumValue) ? maximumValue : 100);
     const valueRef = useLiveRef(value !== null && !isNaN(value) ? Math.min(maximumValueRef.current, Math.max(minimumValueRef.current, value)) : 0);
@@ -128,13 +128,16 @@ const Slider = ({ className, value, buffered, minimumValue, maximumValue, disabl
             onMouseLeave={handleMouseLeave}
         >
             <div className={styles['layer']}>
-                <div className={styles['track']} />
+                <div className={classnames(styles['track'], { [styles['audio-boost']]: audioBoost })} />
             </div>
             <div className={styles['layer']}>
                 <div className={styles['track-before']} style={{ width: `calc(100% * ${bufferedPosition})` }} />
             </div>
             <div className={styles['layer']}>
-                <div className={styles['track-after']} style={{ width: `calc(100% * ${thumbPosition})` }} />
+                <div
+                    className={classnames(styles['track-after'], { [styles['audio-boost']]: audioBoost })}
+                    style={{ '--mask-width': `calc(${thumbPosition} * 100%)` }}
+                />
             </div>
             <div className={styles['layer']}>
                 <div className={styles['thumb']} style={{ marginLeft: `calc(100% * ${thumbPosition})` }} />
@@ -151,7 +154,8 @@ Slider.propTypes = {
     maximumValue: PropTypes.number,
     disabled: PropTypes.bool,
     onSlide: PropTypes.func,
-    onComplete: PropTypes.func
+    onComplete: PropTypes.func,
+    audioBoost: PropTypes.bool
 };
 
 module.exports = Slider;

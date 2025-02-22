@@ -76,7 +76,7 @@ const useVideo = () => {
     };
 
     const addExtraSubtitlesTracks = (tracks) => {
-        if (shell.active) {
+        if (shell.active && storage.useMpvForExternalSubtitles) {
             tracks.forEach((track) => {
                 shell.transport.send('mpv-command', ['sub-add', track.url, 'auto', `${track.origin} External`, track.lang]);
             });

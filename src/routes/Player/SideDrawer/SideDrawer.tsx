@@ -1,11 +1,11 @@
 // Copyright (C) 2017-2024 Smart code 203358507
 
-import React, { useMemo, useCallback, useState, forwardRef, memo } from 'react';
+import React, {forwardRef, memo, useCallback, useMemo, useState} from 'react';
 import classNames from 'classnames';
 import Icon from '@stremio/stremio-icons/react';
-import { useServices } from 'stremio/services';
-import { CONSTANTS } from 'stremio/common';
-import { MetaPreview, Video } from 'stremio/components';
+import {useServices} from 'stremio/services';
+import {CONSTANTS} from 'stremio/common';
+import {MetaPreview, Video} from 'stremio/components';
 import SeasonsBar from 'stremio/routes/MetaDetails/VideosList/SeasonsBar';
 import styles from './SideDrawer.less';
 
@@ -57,6 +57,25 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
         });
     }, []);
 
+    const getAltThumbnail = React.useCallback((video: Video, currentSeason: number) => {
+        if (currentSeason === null || typeof video.thumbnail !== 'string' || video.thumbnail.length === 0 || typeof video.episode !== 'number' || isNaN(video.episode)) return '';
+        const previousEpisodes = metaItem.videos.filter((videoData) =>
+            videoData.season !== null && videoData.season !== 0 && videoData.season && videoData.season < currentSeason
+        ).length;
+        if (isNaN(previousEpisodes) || previousEpisodes === 0) return '';
+        //Fallback correction for Animes
+        const correctedEpisode = previousEpisodes + video.episode;
+        // This regex assumes the URL is in the format:
+        // protocol://domain/id/season/episode/rest
+        return video.thumbnail.replace(
+            /^(https?:\/\/[^/]+\/[^/]+)\/(\d+)\/(\d+)(\/.*)$/,
+            (_, base, origSeason, origEpisode, rest) => {
+                // Replace the season with "1" and the episode with the corrected value
+                return `${base}/1/${correctedEpisode}${rest}`;
+            }
+        );
+    }, [metaItem.videos]);
+
     const onMouseDown = (event: React.MouseEvent) => {
         event.stopPropagation();
     };
@@ -95,6 +114,7 @@ const SideDrawer = memo(forwardRef<HTMLDivElement, Props>(({ seriesInfo, classNa
                                     id={video.id}
                                     title={video.title}
                                     thumbnail={video.thumbnail}
+                                    altThumbnail={getAltThumbnail(video, season)}
                                     episode={video.episode}
                                     released={video.released}
                                     upcoming={video.upcoming}

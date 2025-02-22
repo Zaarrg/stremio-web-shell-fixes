@@ -8,7 +8,7 @@ const { CONSTANTS } = require('stremio/common');
 const { Button, Image } = require('stremio/components');
 const styles = require('./styles');
 
-const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideoRequested }) => {
+const NextVideoPopup = ({ className, metaItem, nextVideo, altThumbnail, onDismiss, onNextVideoRequested }) => {
     const watchNowButtonRef = React.useRef(null);
     const [animationEnded, setAnimationEnded] = React.useState(false);
     const videoName = React.useMemo(() => {
@@ -55,7 +55,16 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideo
                     src={nextVideo?.thumbnail}
                     alt={' '}
                     fallbackSrc={metaItem?.poster}
-                    renderFallback={renderPosterFallback}
+                    renderFallback={() => {
+                        return (
+                            <Image
+                                className={styles['poster-image']}
+                                src={altThumbnail}
+                                alt=" "
+                                renderFallback={renderPosterFallback}
+                            />
+                        );
+                    }}
                 />
             </div>
             <div className={styles['info-container']}>
@@ -95,6 +104,7 @@ const NextVideoPopup = ({ className, metaItem, nextVideo, onDismiss, onNextVideo
 NextVideoPopup.propTypes = {
     className: PropTypes.string,
     metaItem: PropTypes.object,
+    altThumbnail: PropTypes.string,
     nextVideo: PropTypes.object,
     onDismiss: PropTypes.func,
     onNextVideoRequested: PropTypes.func

@@ -192,6 +192,12 @@ const Settings = () => {
             updateStorage({ [storageKey]: updatedList });
     }, [storage]);
 
+    const updateStorageValue = React.useCallback((storageKey) => (selectedOption) => {
+        updateStorage({
+            [storageKey]: (selectedOption.value)
+        });
+    }, []);
+
     const sideMenuButtonOnClick = React.useCallback((event) => {
         const section = sections.find((section) => {
             return section.id === event.currentTarget.dataset.section;
@@ -467,6 +473,19 @@ const Settings = () => {
                                 onSelect={updateStorageStringList('subtitlePriorityKeywords')}
                             />
                         </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{'Subtitles Selection Mode'}</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                options={[
+                                    ...defaultsMultiSelect.defaultSubSelectionMode
+                                ]}
+                                selected={[storage.subtitleSelectionMode]}
+                                onSelect={updateStorageValue('subtitleSelectionMode')}
+                            />
+                        </div>
                         {
                             shell.active ?
                                 <div className={styles['option-container']}>
@@ -476,6 +495,22 @@ const Settings = () => {
                                     <Toggle
                                         className={classnames(styles['option-input-container'], styles['toggle-container'])}
                                         {...escExitFullscreenToggle}
+                                    />
+                                </div>
+                                :
+                                null
+                        }
+                        {
+                            shell.active ?
+                                <div className={styles['option-container']}>
+                                    <div className={styles['option-name-container']}>
+                                        <div className={styles['label']}>{'Use mpv for external subtitles'}</div>
+                                    </div>
+                                    <Toggle
+                                        className={classnames(styles['option-input-container'], styles['toggle-container'])}
+                                        tabIndex={-1}
+                                        checked={storage.useMpvForExternalSubtitles}
+                                        onClick={() => updateStorage({useMpvForExternalSubtitles: !storage.useMpvForExternalSubtitles})}
                                     />
                                 </div>
                                 :
@@ -549,6 +584,17 @@ const Settings = () => {
                                 multiSelect={true}
                                 selected={storage.allowedAudioLanguages}
                                 onSelect={updateStorageStringList('allowedAudioLanguages')}
+                            />
+                        </div>
+                        <div className={styles['option-container']}>
+                            <div className={styles['option-name-container']}>
+                                <div className={styles['label']}>{'Max Volume'}</div>
+                            </div>
+                            <Multiselect
+                                className={classnames(styles['option-input-container'], styles['multiselect-container'])}
+                                options={[...defaultsMultiSelect.defaultMaxVolume]}
+                                selected={[storage.maxVolume]}
+                                onSelect={updateStorageValue('maxVolume')}
                             />
                         </div>
                         <div className={styles['option-container']}>

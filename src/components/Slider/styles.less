@@ -2,6 +2,12 @@
 
 @import (reference) '~@stremio/stremio-colors/less/stremio-colors.less';
 
+@audio-boost-background: linear-gradient(to right,
+    var(--primary-foreground-color) 0%,
+    var(--primary-foreground-color) 50%,
+    var(--warning-accent-color) 75%,
+    var(--danger-accent-color) 100%) !important;
+
 html.active-slider-within {
     cursor: grabbing;
 
@@ -37,9 +43,15 @@ html.active-slider-within {
     .track {
         z-index: 0;
         flex: 1;
+        width: 100%;
         height: var(--track-size);
         border-radius: var(--track-size);
         background-color: var(--overlay-color);
+
+        &.audio-boost {
+            opacity: 0.3;
+            background: @audio-boost-background;
+        }
     }
 
     .track-before {
@@ -53,9 +65,19 @@ html.active-slider-within {
     .track-after {
         z-index: 2;
         flex: none;
+        width: 100%;
         height: var(--track-size);
         border-radius: var(--track-size);
         background-color: var(--primary-foreground-color);
+        mask-image: linear-gradient(to right,
+            black 0%,
+            black var(--mask-width),
+            transparent var(--mask-width)
+        );
+
+        &.audio-boost {
+            background: @audio-boost-background;
+        }
     }
 
     .thumb {

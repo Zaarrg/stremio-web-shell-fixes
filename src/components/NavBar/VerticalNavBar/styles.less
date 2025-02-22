@@ -13,6 +13,7 @@
     background-color: transparent;
     overflow-y: auto;
     scrollbar-width: none;
+    -ms-overflow-style: none;
 
     &::-webkit-scrollbar {
         display: none;
@@ -21,6 +22,7 @@
     .nav-tab-button {
         width: calc(var(--vertical-nav-bar-size) - 1.2rem);
         height: calc(var(--vertical-nav-bar-size) - 1.2rem);
+        min-height: 3.5rem;
     }
 }
 

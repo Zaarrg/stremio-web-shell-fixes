@@ -5,12 +5,15 @@ interface StorageData {
     subtitleId: string;
     audioTrackId: string;
     subtitlePriorityKeywords: string[];
+    subtitleSelectionMode: string;
     defaultSubtitleLanguages: string[];
     defaultAudioLanguages: string[];
     allowedSubtitleLanguages: string[];
     allowedAudioLanguages: string[];
     rememberTrackSelection: boolean;
     showSubTrackLoadedToast: boolean;
+    useMpvForExternalSubtitles: boolean;
+    maxVolume: string;
 }
 
 // Central default values for storage data
@@ -19,12 +22,15 @@ const localProfile: StorageData = {
     subtitleId: '',
     audioTrackId: '',
     subtitlePriorityKeywords: ['full', 'dialogue'],
+    subtitleSelectionMode: 'default',
     defaultSubtitleLanguages: ['eng'],
     defaultAudioLanguages: ['eng'],
     allowedSubtitleLanguages: ['any'],
     allowedAudioLanguages: ['any'],
     rememberTrackSelection: true,
     showSubTrackLoadedToast: true,
+    useMpvForExternalSubtitles: true,
+    maxVolume: '130',
 };
 
 export const defaultsMultiSelect = {
@@ -32,6 +38,24 @@ export const defaultsMultiSelect = {
         value: keyword,
         label: keyword.charAt(0).toUpperCase() + keyword.slice(1)
     })),
+    defaultMaxVolume: ['75', '100', '125', '130', '150', '175', '200', '225'].map((keyword) => ({
+        value: keyword,
+        label: keyword + '%'
+    })),
+    defaultSubSelectionMode: [
+        {
+            value: 'default',
+            label: 'Select Default Subtitle'
+        },
+        {
+            value: 'forced',
+            label: 'Select Forced Subtitle'
+        },
+        {
+            value: 'off',
+            label: 'Select Disabled'
+        }
+    ],
 };
 
 interface StorageContextType {

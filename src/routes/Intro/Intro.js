@@ -8,9 +8,8 @@ const { default: Icon } = require('@stremio/stremio-icons/react');
 const { Modal, useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
 const { useBinaryState } = require('stremio/common');
-const { Button, Image } = require('stremio/components');
+const { Button, Image, Checkbox } = require('stremio/components');
 const CredentialsTextInput = require('./CredentialsTextInput');
-const ConsentToggle = require('./ConsentToggle');
 const PasswordResetModal = require('./PasswordResetModal');
 const useFacebookLogin = require('./useFacebookLogin');
 const styles = require('./styles');
@@ -308,30 +307,27 @@ const Intro = ({ queryParams }) => {
                                     onChange={confirmPasswordOnChange}
                                     onSubmit={confirmPasswordOnSubmit}
                                 />
-                                <ConsentToggle
+                                <Checkbox
                                     ref={termsRef}
-                                    className={styles['consent-toggle']}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Terms and conditions'}
                                     href={'https://www.stremio.com/tos'}
                                     checked={state.termsAccepted}
-                                    onToggle={toggleTermsAccepted}
+                                    onChange={toggleTermsAccepted}
                                 />
-                                <ConsentToggle
+                                <Checkbox
                                     ref={privacyPolicyRef}
-                                    className={styles['consent-toggle']}
                                     label={'I have read and agree with the Stremio'}
                                     link={'Privacy Policy'}
                                     href={'https://www.stremio.com/privacy'}
                                     checked={state.privacyPolicyAccepted}
-                                    onToggle={togglePrivacyPolicyAccepted}
+                                    onChange={togglePrivacyPolicyAccepted}
                                 />
-                                <ConsentToggle
+                                <Checkbox
                                     ref={marketingRef}
-                                    className={styles['consent-toggle']}
                                     label={'I agree to receive marketing communications from Stremio'}
                                     checked={state.marketingAccepted}
-                                    onToggle={toggleMarketingAccepted}
+                                    onChange={toggleMarketingAccepted}
                                 />
                             </React.Fragment>
                             :
