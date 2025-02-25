@@ -1,6 +1,7 @@
 const React = require('react');
+const {useCircularBuffer} = require('stremio/common');
 
-const WS_URL = process.env.SYNC_WS || 'wss://stremio-sync.zarg.me/ws';
+const WS_URL = process.env.SYNC_WS || 'wss://stremio-sync.zarg.me/rust';
 
 const useSync = (token) => {
     const [status, setStatus] = React.useState('disconnected');
@@ -9,6 +10,7 @@ const useSync = (token) => {
     const [limitOther, setLimitOther] = React.useState(false);
     const [isHost, setHost] = React.useState(false);
     const [networkDelay, setNetworkDelay] = React.useState(100);
+    const [avgLatency, pushLatency] = useCircularBuffer(10);
     const wsRef = React.useRef(null);
     const pingIntervalRef = React.useRef(null);
 
@@ -80,7 +82,8 @@ const useSync = (token) => {
                         const sentTimestamp = parseInt(message.payload, 10);
                         const rtt = Date.now() - sentTimestamp;
                         const latency = rtt / 2;
-                        setNetworkDelay(latency);
+                        const newAvgLatency = pushLatency(latency);
+                        setNetworkDelay(newAvgLatency);
                         break;
                     }
                     case 'error':
@@ -105,7 +108,7 @@ const useSync = (token) => {
                 pingIntervalRef.current = null;
             }
         };
-    }, [token]);
+    }, [token, avgLatency]);
 
     // Exposed functions for UI events:
     const connectAsHost = React.useCallback(() => {

@@ -24,6 +24,7 @@ const { default: useShell } = require('./useShell');
 const useStreamingServer = require('./useStreamingServer');
 const useTorrent = require('./useTorrent');
 const useTranslate = require('./useTranslate');
+const useCircularBuffer = require('./useCircularBuffer');
 
 module.exports = {
     FileDropProvider,
@@ -47,6 +48,7 @@ module.exports = {
     routesRegexp,
     useAnimationFrame,
     useBinaryState,
+    useCircularBuffer,
     useFullscreen,
     useLiveRef,
     useModelState,
