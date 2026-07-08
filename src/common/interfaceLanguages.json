@@ -1,4 +1,4 @@
-[
+﻿[
     {
         "name": "العربية",
         "codes": ["ar-AR", "ara"]
@@ -42,6 +42,10 @@
     {
         "name": "español",
         "codes": ["es-ES", "spa"]
+    },
+    {
+        "name": "español (Latinoamérica)",
+        "codes": ["es-MX", "spa"]
     },
     {
         "name": "euskara",
